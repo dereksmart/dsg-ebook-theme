@@ -6,7 +6,7 @@
  *   - Dictionary popover for `.dsg-define`
  *   - Reader controls (text scale, font, width, line height, theme)
  *   - Reading progress bar + estimated time-left
- *   - Chapter-jump arrows + keyboard shortcuts
+ *   - Chapter-jump arrows, keyboard shortcuts, and essay swipe navigation
  */
 ( function () {
 	'use strict';
@@ -534,6 +534,81 @@
 		} );
 	}
 
+	// --------- mobile essay swipes ---------
+	function wireEssaySwipe() {
+		if ( ! document.querySelector( '.dsg-essay-nav' ) || ! ( 'ontouchstart' in window ) ) {
+			return;
+		}
+
+		var startX = 0;
+		var startY = 0;
+		var lastX = 0;
+		var lastY = 0;
+		var tracking = false;
+		var ignored = false;
+
+		document.addEventListener( 'touchstart', function ( e ) {
+			if ( e.touches.length !== 1 ) {
+				tracking = false;
+				return;
+			}
+			ignored = isSwipeTargetIgnored( e.target );
+			tracking = ! ignored;
+			startX = e.touches[0].clientX;
+			startY = e.touches[0].clientY;
+			lastX = startX;
+			lastY = startY;
+		}, { passive: true } );
+
+		document.addEventListener( 'touchmove', function ( e ) {
+			if ( e.touches.length !== 1 ) {
+				resetSwipe();
+				return;
+			}
+			if ( ! tracking || ignored ) {
+				return;
+			}
+			lastX = e.touches[0].clientX;
+			lastY = e.touches[0].clientY;
+		}, { passive: true } );
+
+		document.addEventListener( 'touchend', function () {
+			if ( ! tracking || ignored ) {
+				resetSwipe();
+				return;
+			}
+			var dx = lastX - startX;
+			var dy = lastY - startY;
+			var absX = Math.abs( dx );
+			var absY = Math.abs( dy );
+			resetSwipe();
+			if ( absX < 72 || absX < absY * 1.45 ) {
+				return;
+			}
+			turnPage( dx < 0 ? 1 : -1 );
+		}, { passive: true } );
+
+		document.addEventListener( 'touchcancel', resetSwipe, { passive: true } );
+
+		function resetSwipe() {
+			tracking = false;
+			ignored = false;
+			startX = 0;
+			startY = 0;
+			lastX = 0;
+			lastY = 0;
+		}
+	}
+	function isSwipeTargetIgnored( target ) {
+		return !! (
+			target &&
+			target.closest &&
+			target.closest(
+				'a, button, input, textarea, select, [contenteditable], .dsg-reader-panel, .dsg-popover, .dsg-footnote-marker, .dsg-define'
+			)
+		);
+	}
+
 	// --------- popover dismiss on outside click ---------
 	function wireDismiss() {
 		document.addEventListener( 'click', function ( e ) {
@@ -620,6 +695,7 @@
 		wireReaderControls();
 		wireProgress();
 		wireKeyboard();
+		wireEssaySwipe();
 		wireDismiss();
 	}
 	if ( document.readyState === 'loading' ) {
