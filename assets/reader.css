@@ -268,7 +268,7 @@ body.admin-bar { --dsg-admin-bar-h: 32px; }
 .dsg-font-mono { font-family: var(--wp--preset--font-family--mono); }
 .dsg-footer-inner {
 	display: grid;
-	grid-template-columns: 40px minmax(120px, 1fr) max-content;
+	grid-template-columns: 4ch minmax(120px, 1fr) max-content;
 	align-items: center;
 	column-gap: 14px;
 	width: min(100%, 560px);
@@ -326,8 +326,8 @@ body.admin-bar { --dsg-admin-bar-h: 32px; }
 .dsg-progress-pct {
 	color: var(--wp--preset--color--ink);
 	font-weight: 500;
-	min-width: 28px;
-	text-align: right;
+	min-width: 0;
+	text-align: left;
 	font-variant-numeric: tabular-nums;
 }
 .dsg-time-left {
@@ -900,10 +900,9 @@ html[data-theme="dark"] .dsg-highlight { background: rgba(232, 196, 80, 0.22); }
 /* ---------- responsive ---------- */
 @media (max-width: 820px) {
 	.dsg-footer-inner {
-		grid-template-columns: max-content minmax(56px, 1fr) max-content;
+		grid-template-columns: 4ch minmax(56px, 1fr) max-content;
 		column-gap: 8px;
 	}
-	.dsg-progress-pct { min-width: 0; }
 	.dsg-time-left { font-size: 10px; }
 }
 
