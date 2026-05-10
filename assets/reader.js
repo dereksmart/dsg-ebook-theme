@@ -190,8 +190,8 @@
 		}
 		// Faux locations: 12 "locations" per ~100 vertical pixels of content.
 		var totalLoc = Math.max( 200, Math.round( document.documentElement.scrollHeight / 8 ) );
-		// Reading time from the visible chapter text, with sensible floor.
-		var totalMin = readingTimeFor( document.querySelector( '.dsg-chapter-content, .dsg-archive, .dsg-cover' ) ) || 4;
+		// Reading time from the full reader body, with a sensible floor.
+		var totalMin = readingTimeFor( document.querySelector( '.dsg-main' ) || document.querySelector( 'main' ) ) || 4;
 
 		function fmt( m ) {
 			if ( m < 1 ) { return 'a moment left'; }

@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const DSG_EBOOK_VERSION = '0.1.0';
+const DSG_EBOOK_VERSION = '0.1.1';
 
 /**
  * Theme support.
@@ -107,8 +107,69 @@ function dsg_ebook_register_blocks() {
 			'render_callback' => 'dsg_ebook_render_chapter_number',
 		)
 	);
+	register_block_type(
+		'dsg/page-chapter',
+		array(
+			'api_version'     => 3,
+			'attributes'      => array(
+				'slug'    => array( 'type' => 'string' ),
+				'id'      => array( 'type' => 'string' ),
+				'chapter' => array( 'type' => 'string' ),
+				'title'   => array( 'type' => 'string' ),
+				'dek'     => array( 'type' => 'string' ),
+				'dropcap' => array( 'type' => 'boolean' ),
+			),
+			'render_callback' => 'dsg_ebook_render_page_chapter',
+		)
+	);
 }
 add_action( 'init', 'dsg_ebook_register_blocks' );
+
+/**
+ * Render a front-page chapter from a normal WordPress page.
+ *
+ * This keeps the Kindle front page dynamic without making the content live in
+ * template HTML. Authors can edit /about/ and /projects/ normally; the homepage
+ * chapter follows along.
+ */
+function dsg_ebook_render_page_chapter( $attributes ) {
+	$slug = isset( $attributes['slug'] ) ? sanitize_title( $attributes['slug'] ) : '';
+	if ( '' === $slug ) {
+		return '';
+	}
+
+	$page = get_page_by_path( $slug );
+	if ( ! $page || 'publish' !== get_post_status( $page ) ) {
+		return '';
+	}
+
+	$id      = isset( $attributes['id'] ) && '' !== $attributes['id'] ? sanitize_title( $attributes['id'] ) : $slug;
+	$chapter = isset( $attributes['chapter'] ) ? $attributes['chapter'] : '';
+	$title   = isset( $attributes['title'] ) && '' !== $attributes['title'] ? $attributes['title'] : get_the_title( $page );
+	$dek     = isset( $attributes['dek'] ) ? $attributes['dek'] : '';
+	$dropcap = ! empty( $attributes['dropcap'] );
+
+	$content = apply_filters( 'the_content', $page->post_content );
+	$content_class = 'dsg-page-content' . ( $dropcap ? ' has-dropcap' : '' );
+
+	ob_start();
+	?>
+	<section id="<?php echo esc_attr( $id ); ?>" class="dsg-chapter dsg-page-chapter">
+		<?php if ( '' !== $chapter ) : ?>
+			<div class="dsg-chapter-num"><?php echo esc_html( $chapter ); ?></div>
+		<?php endif; ?>
+		<h2 class="dsg-chapter-title has-text-align-center"><?php echo esc_html( $title ); ?></h2>
+		<?php if ( '' !== $dek ) : ?>
+			<p class="dsg-chapter-dek has-text-align-center"><?php echo esc_html( $dek ); ?></p>
+		<?php endif; ?>
+		<div class="<?php echo esc_attr( $content_class ); ?>">
+			<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		</div>
+		<div class="dsg-ornament" aria-hidden="true">· · ·</div>
+	</section>
+	<?php
+	return ob_get_clean();
+}
 
 /**
  * Render "Chapter One" / "Chapter Two" / etc. for the current post.

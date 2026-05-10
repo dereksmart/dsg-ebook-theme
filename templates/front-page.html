@@ -10,7 +10,9 @@
 		<p class="has-text-align-center dsg-cover-pub">First Edition · 2026 · Self-Published</p>
 		<!-- /wp:paragraph -->
 
-		<!-- wp:site-title {"level":1,"className":"dsg-cover-title"} /-->
+		<!-- wp:heading {"level":1,"className":"dsg-cover-title","textAlign":"center"} -->
+		<h1 class="wp-block-heading has-text-align-center dsg-cover-title">Collected<br>Works</h1>
+		<!-- /wp:heading -->
 
 		<!-- wp:paragraph {"className":"dsg-cover-amp","align":"center"} -->
 		<p class="has-text-align-center dsg-cover-amp">&amp;</p>
@@ -34,7 +36,7 @@
 	<!-- /wp:group -->
 
 	<!-- wp:group {"className":"dsg-toc","layout":{"type":"constrained"}} -->
-	<div class="wp-block-group dsg-toc">
+	<div id="contents" class="wp-block-group dsg-toc">
 
 		<!-- wp:heading {"level":2,"className":"dsg-toc-heading","textAlign":"center"} -->
 		<h2 class="wp-block-heading has-text-align-center dsg-toc-heading">Contents</h2>
@@ -44,28 +46,23 @@
 		<ul class="dsg-toc-list">
 			<li>
 				<span class="dsg-toc-roman">i.</span>
-				<span class="dsg-toc-name">About the Author<small>a short, mostly accurate, biography</small></span>
-				<span class="dsg-toc-pct">2%</span>
+				<a class="dsg-toc-name" href="#about">About the Author<small>a short, mostly accurate biography</small></a>
+				<span class="dsg-toc-pct">page</span>
 			</li>
 			<li>
 				<span class="dsg-toc-roman">ii.</span>
-				<span class="dsg-toc-name">Selected Works<small>projects worth pointing at</small></span>
-				<span class="dsg-toc-pct">14%</span>
+				<a class="dsg-toc-name" href="#works">Selected Works<small>projects worth pointing at</small></a>
+				<span class="dsg-toc-pct">page</span>
 			</li>
 			<li>
 				<span class="dsg-toc-roman">iii.</span>
-				<span class="dsg-toc-name">Essays<small>occasional writing, in reverse chronological</small></span>
-				<span class="dsg-toc-pct">38%</span>
+				<a class="dsg-toc-name" href="#essays">Essays<small>occasional writing, in reverse chronological</small></a>
+				<span class="dsg-toc-pct">posts</span>
 			</li>
 			<li>
 				<span class="dsg-toc-roman">iv.</span>
-				<span class="dsg-toc-name">Currently<small>reading, building, listening — updated weekly</small></span>
-				<span class="dsg-toc-pct">86%</span>
-			</li>
-			<li>
-				<span class="dsg-toc-roman">v.</span>
-				<span class="dsg-toc-name">Coda<small>where to find me, how to get in touch</small></span>
-				<span class="dsg-toc-pct">98%</span>
+				<a class="dsg-toc-name" href="#coda">Coda<small>where to find me, how to get in touch</small></a>
+				<span class="dsg-toc-pct">end</span>
 			</li>
 		</ul>
 		<!-- /wp:html -->
@@ -73,8 +70,12 @@
 	</div>
 	<!-- /wp:group -->
 
+	<!-- wp:dsg/page-chapter {"slug":"about","id":"about","chapter":"Chapter One","title":"About the Author","dek":"a short, mostly accurate biography","dropcap":true} /-->
+
+	<!-- wp:dsg/page-chapter {"slug":"projects","id":"works","chapter":"Chapter Two","title":"Selected Works","dek":"projects worth pointing at"} /-->
+
 	<!-- wp:group {"className":"dsg-essays-block","layout":{"type":"constrained"}} -->
-	<div class="wp-block-group dsg-essays-block">
+	<div id="essays" class="wp-block-group dsg-essays-block">
 
 		<!-- wp:heading {"level":2,"className":"dsg-toc-heading","textAlign":"center"} -->
 		<h2 class="wp-block-heading has-text-align-center dsg-toc-heading">Recent Essays</h2>
@@ -104,6 +105,36 @@
 		<!-- /wp:query -->
 
 	</div>
+	<!-- /wp:group -->
+
+	<!-- wp:group {"tagName":"section","className":"dsg-chapter dsg-coda","layout":{"type":"constrained"}} -->
+	<section id="coda" class="wp-block-group dsg-chapter dsg-coda">
+
+		<!-- wp:paragraph {"align":"center","className":"dsg-chapter-num"} -->
+		<p class="has-text-align-center dsg-chapter-num">Coda</p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:heading {"level":2,"textAlign":"center","className":"dsg-chapter-title"} -->
+		<h2 class="wp-block-heading has-text-align-center dsg-chapter-title">Where to find me</h2>
+		<!-- /wp:heading -->
+
+		<!-- wp:paragraph {"align":"center","className":"dsg-chapter-dek"} -->
+		<p class="has-text-align-center dsg-chapter-dek">brief and to the point</p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:paragraph {"align":"center","className":"dsg-coda-note"} -->
+		<p class="has-text-align-center dsg-coda-note">If anything in here struck you, I'd like to hear about it.</p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:paragraph {"align":"center","className":"dsg-coda-links"} -->
+		<p class="has-text-align-center dsg-coda-links"><a href="mailto:smart@automattic.com">smart@automattic.com</a> · <a href="https://github.com/dereksmart">github</a> · <a href="https://www.linkedin.com/in/derek-smart/">linkedin</a></p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:html -->
+		<div class="dsg-ornament" aria-hidden="true">FIN.</div>
+		<!-- /wp:html -->
+
+	</section>
 	<!-- /wp:group -->
 
 </main>

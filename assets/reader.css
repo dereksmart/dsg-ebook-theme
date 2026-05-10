@@ -78,6 +78,7 @@ body {
 	font-size: 14px;
 	line-height: 1;
 	padding: 6px 8px;
+	text-decoration: none;
 }
 .dsg-icon-btn:hover { color: var(--wp--preset--color--ink); }
 .dsg-icon-btn.dsg-aa {
@@ -296,12 +297,11 @@ body {
 }
 .dsg-toc-list li {
 	display: grid;
-	grid-template-columns: 60px 1fr 80px;
+	grid-template-columns: 60px 1fr auto;
 	gap: 18px;
 	align-items: baseline;
 	padding: 14px 0;
 	border-bottom: 1px dotted var(--wp--preset--color--rule);
-	cursor: pointer;
 	transition: background 0.15s;
 }
 .dsg-toc-list li:hover {
@@ -318,6 +318,9 @@ body {
 .dsg-toc-name {
 	font-family: var(--wp--preset--font-family--serif);
 	font-size: 22px;
+	color: var(--wp--preset--color--ink);
+	text-decoration: none;
+	border-bottom: none;
 }
 .dsg-toc-name small {
 	display: block;
@@ -332,6 +335,8 @@ body {
 	font-size: 11px;
 	color: var(--wp--preset--color--ink-faint);
 	text-align: right;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
 }
 
 /* ---------- chapter (single posts and pages) ---------- */
@@ -366,6 +371,7 @@ body {
 	margin-right: auto !important;
 }
 
+.dsg-page-content.has-dropcap > p:first-of-type::first-letter,
 .dsg-chapter-content > p:first-of-type::first-letter,
 .entry-content > p:first-of-type::first-letter {
 	font-family: var(--wp--preset--font-family--serif);
@@ -376,10 +382,43 @@ body {
 	padding: 0.08em 0.08em 0 0;
 	color: var(--wp--preset--color--ink);
 }
-.dsg-chapter-content p {
+.dsg-chapter-content p,
+.dsg-page-content p {
 	text-align: justify;
 	hyphens: auto;
 	margin-bottom: 1.1em;
+}
+.dsg-page-content {
+	max-width: var(--wp--style--global--content-size);
+	margin-left: auto;
+	margin-right: auto;
+}
+.dsg-page-content .wp-block-columns {
+	gap: 24px;
+	margin: 32px 0;
+}
+.dsg-page-content .wp-block-column {
+	border-color: var(--wp--preset--color--rule) !important;
+	border-radius: 4px !important;
+	background: rgba(255,255,255,0.18);
+}
+html[data-theme="dark"] .dsg-page-content .wp-block-column {
+	background: rgba(255,255,255,0.03);
+}
+.dsg-page-content h2 {
+	font-family: var(--wp--preset--font-family--serif) !important;
+	font-style: italic;
+	font-size: 24px !important;
+	margin-top: 42px;
+}
+.dsg-page-content h3 {
+	font-family: var(--wp--preset--font-family--serif) !important;
+	font-size: 22px !important;
+	font-weight: 400 !important;
+}
+.dsg-page-content h3 a {
+	border-bottom: none;
+	text-decoration: none;
 }
 
 /* ---------- inline formats ---------- */
@@ -486,6 +525,25 @@ html[data-theme="dark"] .dsg-highlight { background: rgba(232, 196, 80, 0.22); }
 	margin-top: 48px;
 	font-family: var(--wp--preset--font-family--mono);
 	font-size: 12px;
+}
+
+.dsg-coda-note {
+	font-family: var(--wp--preset--font-family--serif);
+	font-style: italic;
+	color: var(--wp--preset--color--ink-soft);
+	font-size: 20px;
+	max-width: 30ch;
+	margin: 0 auto 32px !important;
+}
+.dsg-coda-links {
+	font-family: var(--wp--preset--font-family--mono);
+	font-size: 13px;
+	color: var(--wp--preset--color--ink-soft);
+	letter-spacing: 0.04em;
+}
+.dsg-coda-links a {
+	border-bottom: 1px solid var(--wp--preset--color--rule);
+	text-decoration: none;
 }
 
 /* ---------- responsive ---------- */
