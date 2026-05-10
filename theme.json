@@ -56,7 +56,7 @@
 			"fontFamily": "var(--wp--preset--font-family--serif)",
 			"fontSize": "18px",
 			"lineHeight": "1.65",
-			"letterSpacing": "0.005em"
+			"letterSpacing": "0"
 		},
 		"elements": {
 			"heading": {
@@ -68,14 +68,14 @@
 			},
 			"h1": {
 				"typography": {
-					"fontSize": "clamp(40px, 6vw, 72px)",
+					"fontSize": "56px",
 					"lineHeight": "1.05",
-					"letterSpacing": "-0.015em"
+					"letterSpacing": "0"
 				}
 			},
 			"h2": {
 				"typography": {
-					"fontSize": "clamp(28px, 4vw, 40px)",
+					"fontSize": "36px",
 					"lineHeight": "1.1"
 				}
 			},

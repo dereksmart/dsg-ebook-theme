@@ -6,8 +6,8 @@
  *   - Dictionary popover for `.dsg-define`
  *   - Bookmark ribbon (per-URL, persisted in localStorage)
  *   - Aa cycler (font size + light/dark theme)
- *   - Reading progress bar + faux Loc + estimated time-left
- *   - Live clock + chapter-jump arrows + keyboard shortcuts
+ *   - Reading progress bar + estimated time-left
+ *   - Chapter-jump arrows + keyboard shortcuts
  */
 ( function () {
 	'use strict';
@@ -179,17 +179,14 @@
 		}
 	}
 
-	// --------- reading progress + Loc + time left ---------
+	// --------- reading progress + time left ---------
 	function wireProgress() {
 		var fill = document.getElementById( 'dsg-fill' );
 		var pct = document.getElementById( 'dsg-pct' );
-		var loc = document.getElementById( 'dsg-loc' );
 		var timeLeft = document.getElementById( 'dsg-time-left' );
 		if ( ! fill ) {
 			return;
 		}
-		// Faux locations: 12 "locations" per ~100 vertical pixels of content.
-		var totalLoc = Math.max( 200, Math.round( document.documentElement.scrollHeight / 8 ) );
 		// Reading time from the full reader body, with a sensible floor.
 		var totalMin = readingTimeFor( document.querySelector( '.dsg-main' ) || document.querySelector( 'main' ) ) || 4;
 
@@ -206,11 +203,6 @@
 			var p = Math.min( 1, Math.max( 0, window.scrollY / max ) );
 			fill.style.width = ( p * 100 ).toFixed( 1 ) + '%';
 			if ( pct ) { pct.textContent = Math.round( p * 100 ) + '%'; }
-			if ( loc ) {
-				loc.textContent =
-					'Loc ' + Math.max( 1, Math.round( p * totalLoc ) ) +
-					' of ' + totalLoc.toLocaleString();
-			}
 			if ( timeLeft ) { timeLeft.textContent = fmt( totalMin * ( 1 - p ) ); }
 		}
 		window.addEventListener( 'scroll', update, { passive: true } );
@@ -223,21 +215,6 @@
 		if ( ! text ) { return 0; }
 		var words = text.split( /\s+/ ).length;
 		return Math.max( 1, Math.round( words / 220 ) );
-	}
-
-	// --------- live clock ---------
-	function wireClock() {
-		var c = document.getElementById( 'dsg-clock' );
-		if ( ! c ) { return; }
-		function tick() {
-			var d = new Date();
-			var h = d.getHours() % 12;
-			if ( h === 0 ) { h = 12; }
-			var m = d.getMinutes();
-			c.textContent = h + ':' + ( m < 10 ? '0' + m : m );
-		}
-		tick();
-		setInterval( tick, 30 * 1000 );
 	}
 
 	// --------- keyboard shortcuts ---------
@@ -299,7 +276,6 @@
 		wireBookmark();
 		wireAa();
 		wireProgress();
-		wireClock();
 		wireKeyboard();
 		wireDismiss();
 	}
