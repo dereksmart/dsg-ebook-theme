@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const DSG_EBOOK_VERSION = '0.1.13';
+const DSG_EBOOK_VERSION = '0.1.15';
 
 /**
  * Theme support.
