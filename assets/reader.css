@@ -360,6 +360,11 @@ body.admin-bar { --dsg-admin-bar-h: 32px; }
 .dsg-pageturn:hover { opacity: 1; color: var(--wp--preset--color--ink); }
 .dsg-pageturn.dsg-pt-left { left: 8px; }
 .dsg-pageturn.dsg-pt-right { right: 8px; }
+.dsg-pageturn.is-disabled {
+	cursor: default;
+	opacity: 0.05;
+	pointer-events: none;
+}
 
 /* ---------- popover (footnote / dictionary) ---------- */
 .dsg-popover {
@@ -898,6 +903,71 @@ html[data-theme="dark"] .dsg-highlight { background: rgba(232, 196, 80, 0.22); }
 	font-size: 12px;
 }
 
+.dsg-essay-nav {
+	max-width: var(--dsg-reading-width);
+	margin: 54px auto 0;
+	padding-top: 24px;
+	border-top: 1px solid var(--wp--preset--color--rule);
+}
+.dsg-essay-nav-grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+	gap: 18px;
+	align-items: stretch;
+}
+.dsg-essay-nav-link,
+.dsg-essay-nav-index {
+	color: var(--wp--preset--color--ink-soft);
+	text-decoration: none;
+}
+.dsg-essay-nav-link {
+	display: flex;
+	flex-direction: column;
+	gap: 7px;
+	min-width: 0;
+	padding: 0 0 2px;
+}
+.dsg-essay-nav-next {
+	align-items: flex-end;
+	text-align: right;
+}
+.dsg-essay-nav-link.is-empty {
+	pointer-events: none;
+}
+.dsg-essay-nav-label,
+.dsg-essay-nav-meta,
+.dsg-essay-nav-index {
+	font-family: var(--wp--preset--font-family--mono);
+	font-size: 10px;
+	letter-spacing: 0.12em;
+	line-height: 1.2;
+	text-transform: uppercase;
+}
+.dsg-essay-nav-title {
+	color: var(--wp--preset--color--ink);
+	font-family: var(--dsg-reader-font);
+	font-size: var(--dsg-list-title-size);
+	font-weight: 400;
+	line-height: 1.18;
+	overflow-wrap: anywhere;
+}
+.dsg-essay-nav-meta {
+	color: var(--wp--preset--color--ink-faint);
+}
+.dsg-essay-nav-index {
+	align-self: center;
+	padding: 8px 0;
+	color: var(--wp--preset--color--ink-faint);
+	white-space: nowrap;
+}
+.dsg-essay-nav-link:hover .dsg-essay-nav-title,
+.dsg-essay-nav-index:hover {
+	color: var(--dsg-accent);
+}
+.dsg-essay-nav-link:hover .dsg-essay-nav-title {
+	font-style: italic;
+}
+
 .dsg-page-content .dsg-coda-note {
 	font-family: var(--dsg-reader-font);
 	font-style: italic;
@@ -985,5 +1055,17 @@ html[data-theme="dark"] .dsg-highlight { background: rgba(232, 196, 80, 0.22); }
 		.dsg-essay-date {
 			display: block;
 			margin-top: 6px !important;
+		}
+		.dsg-essay-nav-grid {
+			grid-template-columns: 1fr;
+			gap: 16px;
+		}
+		.dsg-essay-nav-next {
+			align-items: flex-start;
+			text-align: left;
+		}
+		.dsg-essay-nav-index {
+			justify-self: start;
+			order: -1;
 		}
 	}

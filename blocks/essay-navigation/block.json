@@ -1,21 +1,25 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "dsg/reader-footer",
+	"name": "dsg/essay-navigation",
 	"version": "0.1.0",
-	"title": "Reader Footer",
+	"title": "Essay Navigation",
 	"category": "theme",
-	"icon": "minus",
-	"description": "Render the fixed ereader footer progress chrome.",
+	"icon": "leftright",
+	"description": "Render previous and next essay links in chapter order.",
 	"textdomain": "dsg-ereader",
 	"attributes": {
-		"initialPercent": {
+		"backLabel": {
 			"type": "string",
-			"default": "0%"
+			"default": "All essays"
 		},
-		"initialTimeLeft": {
+		"backHref": {
 			"type": "string",
-			"default": "reading progress"
+			"default": "/#essays"
+		},
+		"showBackLink": {
+			"type": "boolean",
+			"default": true
 		}
 	},
 	"supports": {

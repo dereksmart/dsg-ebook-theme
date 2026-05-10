@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const DSG_EREADER_VERSION = '0.1.26';
+const DSG_EREADER_VERSION = '0.1.27';
 
 /**
  * Theme support.
@@ -205,6 +205,12 @@ function dsg_ebook_register_blocks() {
 		)
 	);
 	register_block_type(
+		__DIR__ . '/blocks/essay-navigation',
+		array(
+			'render_callback' => 'dsg_ebook_render_essay_navigation',
+		)
+	);
+	register_block_type(
 		__DIR__ . '/blocks/page-chapter',
 		array(
 			'render_callback' => 'dsg_ebook_render_page_chapter',
@@ -344,7 +350,7 @@ function dsg_ebook_render_reader_header( $attributes ) {
  */
 function dsg_ebook_render_reader_footer( $attributes ) {
 	$initial_percent = isset( $attributes['initialPercent'] ) && '' !== $attributes['initialPercent'] ? $attributes['initialPercent'] : '0%';
-	$initial_time    = isset( $attributes['initialTimeLeft'] ) && '' !== $attributes['initialTimeLeft'] ? $attributes['initialTimeLeft'] : 'about 2m left';
+	$initial_time    = isset( $attributes['initialTimeLeft'] ) && '' !== $attributes['initialTimeLeft'] ? $attributes['initialTimeLeft'] : 'reading progress';
 
 	ob_start();
 	?>
@@ -355,6 +361,109 @@ function dsg_ebook_render_reader_footer( $attributes ) {
 			<span class="dsg-time-left" id="dsg-time-left"><?php echo esc_html( $initial_time ); ?></span>
 		</div>
 	</div>
+	<?php
+	return ob_get_clean();
+}
+
+/**
+ * Render previous/next essay links in the same oldest-first chapter order used
+ * by the chapter-number block.
+ */
+function dsg_ebook_render_essay_navigation( $attributes ) {
+	if ( ! is_singular( 'post' ) ) {
+		return dsg_ebook_render_editor_block_notice(
+			'Essay Navigation',
+			'This block renders previous and next essay links on single Posts.'
+		);
+	}
+
+	$current_id     = get_the_ID();
+	$neighbors      = dsg_ebook_essay_neighbors( $current_id );
+	$show_back_link = ! array_key_exists( 'showBackLink', $attributes ) || ! empty( $attributes['showBackLink'] );
+	$back_label     = isset( $attributes['backLabel'] ) && '' !== $attributes['backLabel'] ? $attributes['backLabel'] : 'All essays';
+	$back_href      = isset( $attributes['backHref'] ) && '' !== $attributes['backHref'] ? $attributes['backHref'] : '/#essays';
+
+	if ( empty( $neighbors['previous'] ) && empty( $neighbors['next'] ) && ! $show_back_link ) {
+		return '';
+	}
+
+	ob_start();
+	?>
+	<nav class="wp-block-dsg-essay-navigation dsg-essay-nav" aria-label="Essay navigation">
+		<div class="dsg-essay-nav-grid">
+			<?php echo dsg_ebook_render_essay_nav_link( $neighbors['previous'], 'Previous chapter', 'dsg-essay-nav-prev' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<?php if ( $show_back_link ) : ?>
+				<a class="dsg-essay-nav-index" href="<?php echo esc_url( $back_href ); ?>"><?php echo esc_html( $back_label ); ?></a>
+			<?php else : ?>
+				<span class="dsg-essay-nav-index" aria-hidden="true"></span>
+			<?php endif; ?>
+			<?php echo dsg_ebook_render_essay_nav_link( $neighbors['next'], 'Next chapter', 'dsg-essay-nav-next' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		</div>
+	</nav>
+	<?php
+	return ob_get_clean();
+}
+
+/**
+ * Return previous and next posts in oldest-first chapter order.
+ */
+function dsg_ebook_essay_neighbors( $post_id ) {
+	$ids   = dsg_ebook_essay_chapter_ids();
+	$index = array_search( (int) $post_id, $ids, true );
+
+	if ( false === $index ) {
+		return array(
+			'previous' => null,
+			'next'     => null,
+		);
+	}
+
+	return array(
+		'previous' => $index > 0 ? get_post( $ids[ $index - 1 ] ) : null,
+		'next'     => $index < count( $ids ) - 1 ? get_post( $ids[ $index + 1 ] ) : null,
+	);
+}
+
+/**
+ * Shared ordered essay ID list for chapter numbering and navigation.
+ */
+function dsg_ebook_essay_chapter_ids() {
+	static $ids = null;
+	if ( null === $ids ) {
+		$ids = get_posts(
+			array(
+				'post_type'      => 'post',
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'orderby'        => 'date',
+				'order'          => 'ASC',
+				'fields'         => 'ids',
+			)
+		);
+		$ids = array_map( 'intval', $ids );
+	}
+
+	return $ids;
+}
+
+/**
+ * Render one navigation link, or a quiet endpoint marker when absent.
+ */
+function dsg_ebook_render_essay_nav_link( $post, $label, $class_name ) {
+	if ( ! $post ) {
+		return '<span class="dsg-essay-nav-link ' . esc_attr( $class_name ) . ' is-empty" aria-hidden="true"></span>';
+	}
+
+	$chapter = dsg_ebook_chapter_position( $post->ID );
+	$meta    = $chapter ? 'Chapter ' . dsg_ebook_number_word( $chapter ) : get_the_date( 'M Y', $post );
+
+	ob_start();
+	?>
+	<a class="dsg-essay-nav-link <?php echo esc_attr( $class_name ); ?>" href="<?php echo esc_url( get_permalink( $post ) ); ?>">
+		<span class="dsg-essay-nav-label"><?php echo esc_html( $label ); ?></span>
+		<span class="dsg-essay-nav-title"><?php echo esc_html( get_the_title( $post ) ); ?></span>
+		<span class="dsg-essay-nav-meta"><?php echo esc_html( $meta ); ?></span>
+	</a>
 	<?php
 	return ob_get_clean();
 }
@@ -901,16 +1010,7 @@ function dsg_ebook_chapter_position( $post_id ) {
 	static $cache = null;
 	if ( null === $cache ) {
 		$cache = array();
-		$ids   = get_posts(
-			array(
-				'post_type'      => 'post',
-				'post_status'    => 'publish',
-				'posts_per_page' => -1,
-				'orderby'        => 'date',
-				'order'          => 'ASC',
-				'fields'         => 'ids',
-			)
-		);
+		$ids   = dsg_ebook_essay_chapter_ids();
 		foreach ( $ids as $i => $id ) {
 			$cache[ (int) $id ] = $i + 1;
 		}

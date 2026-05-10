@@ -162,6 +162,61 @@
 	text-transform: uppercase;
 }
 
+.editor-styles-wrapper .dsg-essay-nav {
+	max-width: var(--dsg-reading-width);
+	margin: 54px auto 0;
+	padding-top: 24px;
+	border-top: 1px solid var(--wp--preset--color--rule);
+}
+
+.editor-styles-wrapper .dsg-essay-nav-grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+	gap: 18px;
+	align-items: stretch;
+}
+
+.editor-styles-wrapper .dsg-essay-nav-link,
+.editor-styles-wrapper .dsg-essay-nav-index {
+	color: var(--wp--preset--color--ink-soft);
+	text-decoration: none;
+}
+
+.editor-styles-wrapper .dsg-essay-nav-link {
+	display: flex;
+	flex-direction: column;
+	gap: 7px;
+	min-width: 0;
+}
+
+.editor-styles-wrapper .dsg-essay-nav-next {
+	align-items: flex-end;
+	text-align: right;
+}
+
+.editor-styles-wrapper .dsg-essay-nav-label,
+.editor-styles-wrapper .dsg-essay-nav-meta,
+.editor-styles-wrapper .dsg-essay-nav-index {
+	font-family: var(--wp--preset--font-family--mono);
+	font-size: 10px;
+	letter-spacing: 0.12em;
+	line-height: 1.2;
+	text-transform: uppercase;
+}
+
+.editor-styles-wrapper .dsg-essay-nav-title {
+	color: var(--wp--preset--color--ink);
+	font-family: var(--dsg-reader-font);
+	font-size: var(--dsg-list-title-size);
+	font-weight: 400;
+	line-height: 1.18;
+}
+
+.editor-styles-wrapper .dsg-essay-nav-meta,
+.editor-styles-wrapper .dsg-essay-nav-index {
+	color: var(--wp--preset--color--ink-faint);
+}
+
 .editor-styles-wrapper .dsg-ornament {
 	color: var(--wp--preset--color--ink-faint);
 	font-size: 16px;

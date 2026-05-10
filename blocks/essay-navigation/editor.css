@@ -1,0 +1,10 @@
+.wp-block-dsg-essay-navigation {
+	box-sizing: border-box;
+	background: var(--wp--preset--color--paper, #f3ecd8);
+	color: var(--wp--preset--color--ink, #2a2620);
+	font-family: var(--dsg-reader-font, var(--wp--preset--font-family--serif, Georgia, serif));
+}
+
+.wp-block-dsg-essay-navigation .dsg-essay-nav {
+	max-width: var(--dsg-reading-width, 680px);
+}

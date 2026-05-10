@@ -101,8 +101,36 @@
 		right.textContent = '›';
 		document.body.appendChild( left );
 		document.body.appendChild( right );
-		left.addEventListener( 'click', function () { jumpSection( -1 ); } );
-		right.addEventListener( 'click', function () { jumpSection( 1 ); } );
+		updatePageTurnLabels();
+		left.addEventListener( 'click', function () { turnPage( -1 ); } );
+		right.addEventListener( 'click', function () { turnPage( 1 ); } );
+	}
+	function updatePageTurnLabels() {
+		var hasEssayNav = !! document.querySelector( '.dsg-essay-nav' );
+		var prev = document.querySelector( '.dsg-essay-nav-prev:not(.is-empty)' );
+		var next = document.querySelector( '.dsg-essay-nav-next:not(.is-empty)' );
+		var left = document.querySelector( '.dsg-pt-left' );
+		var right = document.querySelector( '.dsg-pt-right' );
+		if ( left ) {
+			left.classList.toggle( 'is-disabled', hasEssayNav && ! prev );
+			left.setAttribute( 'aria-label', prev ? 'Previous chapter' : 'Previous section' );
+		}
+		if ( right ) {
+			right.classList.toggle( 'is-disabled', hasEssayNav && ! next );
+			right.setAttribute( 'aria-label', next ? 'Next chapter' : 'Next section' );
+		}
+	}
+	function turnPage( dir ) {
+		var selector = dir < 0 ? '.dsg-essay-nav-prev:not(.is-empty)' : '.dsg-essay-nav-next:not(.is-empty)';
+		var link = document.querySelector( selector );
+		if ( link && link.href ) {
+			window.location.href = link.href;
+			return;
+		}
+		if ( document.querySelector( '.dsg-essay-nav' ) ) {
+			return;
+		}
+		jumpSection( dir );
 	}
 	function jumpSection( dir ) {
 		var sections = document.querySelectorAll(
@@ -427,8 +455,16 @@
 		if ( ! fill ) {
 			return;
 		}
-		// Reading time from the full reader body, with a sensible floor.
-		var totalMin = readingTimeFor( document.querySelector( '.dsg-main' ) || document.querySelector( 'main' ) ) || 4;
+		var sections = Array.prototype.slice.call(
+			document.querySelectorAll( '.dsg-cover, .dsg-toc, .dsg-chapter, .dsg-essays-chapter, .dsg-archive' )
+		);
+		var isHomepage = document.body.classList.contains( 'home' ) && sections.length > 1;
+		var readingEl = document.querySelector( '.dsg-chapter-content' ) ||
+			document.querySelector( '.dsg-page-content' ) ||
+			document.querySelector( 'article.dsg-chapter' ) ||
+			document.querySelector( '.dsg-main' ) ||
+			document.querySelector( 'main' );
+		var totalMin = readingTimeFor( readingEl ) || 1;
 
 		function fmt( m ) {
 			if ( m < 1 ) { return 'a moment left'; }
@@ -438,16 +474,41 @@
 			return 'about ' + h + 'h ' + mm + 'm left';
 		}
 		function update() {
-			var doc = document.documentElement;
-			var max = ( doc.scrollHeight - window.innerHeight ) || 1;
-			var p = Math.min( 1, Math.max( 0, window.scrollY / max ) );
+			var p = readingProgressFor( isHomepage ? null : readingEl );
 			fill.style.width = ( p * 100 ).toFixed( 1 ) + '%';
 			if ( pct ) { pct.textContent = Math.round( p * 100 ) + '%'; }
-			if ( timeLeft ) { timeLeft.textContent = fmt( totalMin * ( 1 - p ) ); }
+			if ( timeLeft ) {
+				timeLeft.textContent = isHomepage ? sectionLabel( sections ) : fmt( totalMin * ( 1 - p ) );
+			}
 		}
 		window.addEventListener( 'scroll', update, { passive: true } );
 		window.addEventListener( 'resize', update );
 		update();
+	}
+	function readingProgressFor( el ) {
+		if ( el ) {
+			var start = el.getBoundingClientRect().top + window.scrollY - 80;
+			var end = el.getBoundingClientRect().bottom + window.scrollY - window.innerHeight + 80;
+			if ( end > start ) {
+				return Math.min( 1, Math.max( 0, ( window.scrollY - start ) / ( end - start ) ) );
+			}
+		}
+		var doc = document.documentElement;
+		var max = ( doc.scrollHeight - window.innerHeight ) || 1;
+		return Math.min( 1, Math.max( 0, window.scrollY / max ) );
+	}
+	function sectionLabel( sections ) {
+		if ( ! sections.length ) {
+			return 'section 1 of 1';
+		}
+		var threshold = window.scrollY + Math.min( window.innerHeight * 0.42, 320 );
+		var idx = 0;
+		sections.forEach( function ( section, i ) {
+			if ( section.offsetTop <= threshold ) {
+				idx = i;
+			}
+		} );
+		return 'section ' + ( idx + 1 ) + ' of ' + sections.length;
 	}
 	function readingTimeFor( el ) {
 		if ( ! el ) { return 0; }
@@ -462,10 +523,10 @@
 		document.addEventListener( 'keydown', function ( e ) {
 			if ( e.target.closest( 'input, textarea, [contenteditable]' ) ) { return; }
 			if ( e.key === 'ArrowLeft' || e.key === 'PageUp' ) {
-				jumpSection( -1 );
+				turnPage( -1 );
 			} else if ( e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ' ) {
 				e.preventDefault();
-				jumpSection( 1 );
+				turnPage( 1 );
 			} else if ( e.key === 'Escape' ) {
 				hidePopover();
 				setReaderPanelOpen( false );
@@ -519,30 +580,30 @@
 			return 'light';
 		}
 	}
-		function readFont( fonts ) {
+	function readFont( fonts ) {
 		try {
 			var saved = localStorage.getItem( 'dsg-reader-font' );
 			if ( Object.prototype.hasOwnProperty.call( fonts, saved ) ) {
 				return saved;
 			}
 		} catch ( e ) { /* noop */ }
-			return 'serif';
-		}
-		function readChoice( key, choices, fallback ) {
-			try {
-				var saved = localStorage.getItem( key );
-				if ( Object.prototype.hasOwnProperty.call( choices, saved ) ) {
-					return saved;
-				}
-			} catch ( e ) { /* noop */ }
-			return fallback;
-		}
-		function applyVars( vars ) {
-			Object.keys( vars ).forEach( function ( name ) {
-				document.documentElement.style.setProperty( name, vars[ name ] );
-			} );
-		}
-		function escapeHTML( s ) {
+		return 'serif';
+	}
+	function readChoice( key, choices, fallback ) {
+		try {
+			var saved = localStorage.getItem( key );
+			if ( Object.prototype.hasOwnProperty.call( choices, saved ) ) {
+				return saved;
+			}
+		} catch ( e ) { /* noop */ }
+		return fallback;
+	}
+	function applyVars( vars ) {
+		Object.keys( vars ).forEach( function ( name ) {
+			document.documentElement.style.setProperty( name, vars[ name ] );
+		} );
+	}
+	function escapeHTML( s ) {
 		return String( s )
 			.replace( /&/g, '&amp;' )
 			.replace( /</g, '&lt;' )
