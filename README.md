@@ -1,4 +1,4 @@
-# DSG Ebook Theme
+# DSG E-reader Theme
 
 A WordPress block theme for dereksmartgordon.com, built around an e-book/reader interface.
 
