@@ -1,21 +1,21 @@
 .wp-block-dsg-contents {
 	box-sizing: border-box;
-	padding: 24px;
-	border: 1px solid var(--wp--preset--color--rule, #d3c9ad);
 	background: var(--wp--preset--color--paper, #f3ecd8);
 	color: var(--wp--preset--color--ink, #2a2620);
-	font-family: var(--wp--preset--font-family--serif, Georgia, serif);
+	font-family: var(--dsg-reader-font, var(--wp--preset--font-family--serif, Georgia, serif));
 }
 
 .wp-block-dsg-contents .dsg-toc {
-	padding-top: 48px;
-	padding-bottom: 44px;
+	box-sizing: border-box;
+	max-width: var(--dsg-page-width, 760px);
+	margin: 0 auto;
+	padding: 96px 32px 64px;
 }
 
 .wp-block-dsg-contents .dsg-toc-heading {
-	margin: 0 auto 34px;
+	margin: 0 auto 40px;
 	color: var(--wp--preset--color--ink-soft, #5b5446);
-	font-size: 28px;
+	font-size: var(--dsg-toc-heading-size, 28px);
 	font-style: italic;
 	font-weight: 400;
 	letter-spacing: 0.06em;
@@ -23,7 +23,7 @@
 }
 
 .wp-block-dsg-contents .dsg-toc-list {
-	max-width: 680px;
+	max-width: var(--dsg-reading-width, 680px);
 	margin: 0 auto;
 	padding: 0;
 	list-style: none;
@@ -56,7 +56,7 @@
 	display: block;
 	margin-top: 2px;
 	color: var(--wp--preset--color--ink-soft, #5b5446);
-	font-size: 13px;
+	font-size: var(--dsg-toc-subtitle-size, 13px);
 	font-style: italic;
 }
 

@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const DSG_EREADER_VERSION = '0.1.25';
+const DSG_EREADER_VERSION = '0.1.26';
 
 /**
  * Theme support.
@@ -24,6 +24,7 @@ function dsg_ebook_setup() {
 	add_theme_support( 'title-tag' );
 	add_theme_support( 'editor-styles' );
 	add_theme_support( 'wp-block-styles' );
+	add_editor_style( 'assets/editor.css' );
 }
 add_action( 'after_setup_theme', 'dsg_ebook_setup' );
 
@@ -61,6 +62,12 @@ add_action( 'wp_enqueue_scripts', 'dsg_ebook_enqueue', 20 );
  * so authors get them in the rich-text toolbar like Bold and Italic.
  */
 function dsg_ebook_enqueue_editor() {
+	wp_enqueue_style(
+		'dsg-ereader-fonts',
+		'https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400&family=JetBrains+Mono:wght@400;500&display=swap',
+		array(),
+		null
+	);
 	wp_enqueue_script(
 		'dsg-ereader-formats',
 		get_theme_file_uri( 'assets/editor-formats.js' ),

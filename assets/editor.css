@@ -1,0 +1,184 @@
+/* ============================================================
+   DSG E-reader — editor.css
+   Shared reader defaults for block and site editor previews.
+   ============================================================ */
+
+:root,
+.editor-styles-wrapper {
+	--dsg-reader-font: Literata, 'Iowan Old Style', Georgia, serif;
+	--dsg-reader-scale: 1;
+	--dsg-copy-size: 18px;
+	--dsg-small-copy-size: 16px;
+	--dsg-list-title-size: 22px;
+	--dsg-section-title-size: 24px;
+	--dsg-chapter-title-size: 42px;
+	--dsg-archive-title-size: 42px;
+	--dsg-toc-heading-size: 28px;
+	--dsg-toc-subtitle-size: 13px;
+	--dsg-coda-note-size: 20px;
+	--dsg-label-size: 14px;
+	--dsg-small-label-size: 11px;
+	--dsg-cover-title-size: 72px;
+	--dsg-cover-subtitle-size: 24px;
+	--dsg-cover-author-size: 14px;
+	--dsg-cover-author-name-size: 18px;
+	--dsg-cover-meta-size: 10px;
+	--dsg-page-width: 760px;
+	--dsg-reading-width: 680px;
+	--dsg-reader-line-height: 1.68;
+	--dsg-reader-small-line-height: 1.55;
+	--dsg-accent: #24505f;
+	--dsg-accent-soft: #6e7f84;
+}
+
+.editor-styles-wrapper {
+	background-color: var(--wp--preset--color--paper);
+	background-image:
+		radial-gradient(circle at 12% 18%, rgba(0,0,0,0.018) 0, transparent 40%),
+		radial-gradient(circle at 88% 72%, rgba(0,0,0,0.018) 0, transparent 40%);
+	color: var(--wp--preset--color--ink);
+	-webkit-font-smoothing: antialiased;
+}
+
+.editor-styles-wrapper .dsg-main {
+	padding: 0;
+}
+
+.editor-styles-wrapper .dsg-chapter,
+.editor-styles-wrapper .dsg-essays-chapter {
+	box-sizing: border-box;
+	max-width: var(--dsg-page-width);
+	margin-left: auto;
+	margin-right: auto;
+	padding: 88px 32px 68px;
+}
+
+.editor-styles-wrapper .dsg-chapter-num {
+	color: var(--wp--preset--color--ink-faint);
+	font-family: var(--dsg-reader-font);
+	font-size: var(--dsg-label-size);
+	font-style: italic;
+	letter-spacing: 0.2em;
+	margin-bottom: 8px;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+.editor-styles-wrapper .dsg-chapter-title {
+	color: var(--wp--preset--color--ink);
+	font-family: var(--dsg-reader-font) !important;
+	font-size: var(--dsg-chapter-title-size) !important;
+	font-weight: 400 !important;
+	letter-spacing: 0 !important;
+	line-height: 1.1 !important;
+	margin: 0 0 8px !important;
+}
+
+.editor-styles-wrapper .dsg-chapter-dek {
+	color: var(--wp--preset--color--ink-soft) !important;
+	font-family: var(--dsg-reader-font) !important;
+	font-size: var(--dsg-copy-size) !important;
+	font-style: italic !important;
+	line-height: 1.48 !important;
+	margin: 0 auto 48px !important;
+	max-width: 56ch;
+}
+
+.editor-styles-wrapper .dsg-page-content,
+.editor-styles-wrapper .dsg-chapter-content,
+.editor-styles-wrapper .dsg-works-list,
+.editor-styles-wrapper .dsg-essays {
+	max-width: var(--dsg-reading-width);
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.editor-styles-wrapper .dsg-page-content p,
+.editor-styles-wrapper .dsg-page-content li,
+.editor-styles-wrapper .dsg-chapter-content p,
+.editor-styles-wrapper .dsg-chapter-content li {
+	font-family: var(--dsg-reader-font);
+	font-size: var(--dsg-copy-size) !important;
+	line-height: var(--dsg-reader-line-height) !important;
+	margin-bottom: 1.1em;
+}
+
+.editor-styles-wrapper .dsg-page-content a,
+.editor-styles-wrapper .dsg-chapter-content a,
+.editor-styles-wrapper .dsg-coda-links a {
+	color: var(--dsg-accent);
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.13em;
+}
+
+.editor-styles-wrapper .dsg-page-content h2,
+.editor-styles-wrapper .dsg-chapter-content h2 {
+	font-family: var(--dsg-reader-font) !important;
+	font-size: var(--dsg-section-title-size) !important;
+	font-style: italic;
+	margin-top: 42px;
+}
+
+.editor-styles-wrapper .dsg-page-content h3,
+.editor-styles-wrapper .dsg-chapter-content h3 {
+	font-family: var(--dsg-reader-font) !important;
+	font-size: var(--dsg-list-title-size) !important;
+	font-weight: 400 !important;
+}
+
+.editor-styles-wrapper .dsg-works-intro {
+	color: var(--wp--preset--color--ink-soft);
+	font-family: var(--dsg-reader-font);
+	font-size: var(--dsg-copy-size);
+	line-height: var(--dsg-reader-line-height);
+	max-width: 46ch;
+	margin: -12px auto 42px;
+	text-align: center;
+}
+
+.editor-styles-wrapper .dsg-essay-row {
+	align-items: baseline !important;
+	border-bottom: 1px dotted var(--wp--preset--color--rule);
+	display: flex;
+	gap: 24px;
+	justify-content: space-between;
+	padding: 19px 0 21px !important;
+}
+
+.editor-styles-wrapper .dsg-essay-title {
+	font-family: var(--dsg-reader-font) !important;
+	font-size: var(--dsg-list-title-size) !important;
+	font-weight: 400 !important;
+	line-height: 1.25 !important;
+	margin: 0 !important;
+}
+
+.editor-styles-wrapper .dsg-essay-date,
+.editor-styles-wrapper .dsg-work-kicker {
+	color: var(--wp--preset--color--ink-faint) !important;
+	font-family: var(--wp--preset--font-family--mono) !important;
+	font-size: 11px !important;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+.editor-styles-wrapper .dsg-ornament {
+	color: var(--wp--preset--color--ink-faint);
+	font-size: 16px;
+	letter-spacing: 0.6em;
+	padding: 24px 0 16px;
+	text-align: center;
+}
+
+.editor-styles-wrapper .dsg-editor-block-placeholder {
+	max-width: var(--dsg-reading-width);
+	margin: 0 auto;
+	padding: 22px;
+	border: 1px dashed var(--wp--preset--color--rule);
+	background: rgba(255, 255, 255, 0.35);
+	text-align: center;
+}
+
+.editor-styles-wrapper .dsg-editor-block-placeholder p {
+	margin-bottom: 0;
+}
