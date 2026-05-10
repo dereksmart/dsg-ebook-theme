@@ -41,14 +41,13 @@ The theme should keep rendering the site as a book, but pull content from struct
 - Essays chapter: queries recent Posts.
 - Coda chapter: pulls a small Contact/Coda page instead of hard-coded template copy.
 
-Until `dsg_project` exists, the theme can keep falling back to the current `projects` page, but it should render that page as a simple reader list rather than card columns.
+Until `dsg_project` exists, the theme uses a `dsg/projects-chapter` dynamic block as a bridge. It reads the current `projects` page block structure, extracts the section headings and project cards, and renders them as a stable reader list on the homepage. This keeps the editor manageable while avoiding the card/grid markup in the front-page reading flow.
 
 ## Migration Steps
 
-1. Clean up the reader chrome and render the current Projects page as a linear section.
+1. Clean up the reader chrome and render the current Projects page as a linear section. Done in the theme via `dsg/projects-chapter`.
 2. Add a sibling `dsg-site-core` plugin for durable site content types.
 3. Register `dsg_project`, `project_area`, and the project meta fields.
 4. Migrate each current card from the Projects page into a Project post via REST.
 5. Replace the Projects page fallback with a `dsg/projects-chapter` dynamic block.
 6. Set duplicate/legacy pages such as `about-2` and old `home` to draft after confirming nothing links to them.
-

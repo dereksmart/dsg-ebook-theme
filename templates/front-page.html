@@ -7,16 +7,12 @@
 	<div class="wp-block-group dsg-cover">
 
 		<!-- wp:paragraph {"className":"dsg-cover-pub","align":"center"} -->
-		<p class="has-text-align-center dsg-cover-pub">First Edition · 2026 · Self-Published</p>
+		<p class="has-text-align-center dsg-cover-pub">Digital Edition · 2026 · Self-Published</p>
 		<!-- /wp:paragraph -->
 
 		<!-- wp:heading {"level":1,"className":"dsg-cover-title","textAlign":"center"} -->
 		<h1 class="wp-block-heading has-text-align-center dsg-cover-title">Collected<br>Works</h1>
 		<!-- /wp:heading -->
-
-		<!-- wp:paragraph {"className":"dsg-cover-amp","align":"center"} -->
-		<p class="has-text-align-center dsg-cover-amp">&amp;</p>
-		<!-- /wp:paragraph -->
 
 		<!-- wp:site-tagline {"className":"dsg-cover-subtitle","textAlign":"center"} /-->
 
@@ -27,8 +23,8 @@
 		<!-- wp:html -->
 		<div class="dsg-cover-meta">
 			<span>essays &amp; projects</span>
-			<span>est. read · several sittings</span>
-			<span>printed in Brooklyn</span>
+			<span>selected works</span>
+			<span>assembled in Portland, Maine</span>
 		</div>
 		<!-- /wp:html -->
 
@@ -70,16 +66,24 @@
 	</div>
 	<!-- /wp:group -->
 
-	<!-- wp:dsg/page-chapter {"slug":"about","id":"about","chapter":"Chapter One","title":"About the Author","dek":"a short, mostly accurate biography","dropcap":true} /-->
+	<!-- wp:dsg/page-chapter {"slug":"about","id":"about","chapter":"Chapter One","title":"About the Author","dek":"a short, mostly accurate biography"} /-->
 
-	<!-- wp:dsg/page-chapter {"slug":"projects","id":"works","chapter":"Chapter Two","title":"Selected Works","dek":"projects worth pointing at"} /-->
+	<!-- wp:dsg/projects-chapter {"slug":"projects","id":"works","chapter":"Chapter Two","title":"Selected Works","dek":"projects worth pointing at"} /-->
 
 	<!-- wp:group {"className":"dsg-essays-block","layout":{"type":"constrained"}} -->
 	<div id="essays" class="wp-block-group dsg-essays-block">
 
-		<!-- wp:heading {"level":2,"className":"dsg-toc-heading","textAlign":"center"} -->
-		<h2 class="wp-block-heading has-text-align-center dsg-toc-heading">Recent Essays</h2>
+		<!-- wp:paragraph {"align":"center","className":"dsg-chapter-num"} -->
+		<p class="has-text-align-center dsg-chapter-num">Chapter Three</p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:heading {"level":2,"className":"dsg-chapter-title","textAlign":"center"} -->
+		<h2 class="wp-block-heading has-text-align-center dsg-chapter-title">Essays</h2>
 		<!-- /wp:heading -->
+
+		<!-- wp:paragraph {"align":"center","className":"dsg-chapter-dek"} -->
+		<p class="has-text-align-center dsg-chapter-dek">occasional writing, in reverse chronological</p>
+		<!-- /wp:paragraph -->
 
 		<!-- wp:query {"queryId":1,"query":{"perPage":5,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","sticky":"","inherit":false}} -->
 		<div class="wp-block-query">
