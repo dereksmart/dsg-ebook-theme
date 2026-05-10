@@ -1,0 +1,49 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dsg/reader-header",
+	"version": "0.1.0",
+	"title": "Reader Header",
+	"category": "theme",
+	"icon": "align-wide",
+	"description": "Render the fixed ereader header chrome.",
+	"textdomain": "dsg-ereader",
+	"attributes": {
+		"siteLabel": {
+			"type": "string",
+			"default": ""
+		},
+		"siteHref": {
+			"type": "string",
+			"default": "/"
+		},
+		"showReaderSettings": {
+			"type": "boolean",
+			"default": true
+		},
+		"navItems": {
+			"type": "array",
+			"default": [
+				{
+					"label": "Contents",
+					"href": "/#contents"
+				},
+				{
+					"label": "Works",
+					"href": "/#works"
+				},
+				{
+					"label": "Essays",
+					"href": "/#essays"
+				}
+			]
+		}
+	},
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./editor.css"
+}

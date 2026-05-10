@@ -1,0 +1,70 @@
+.wp-block-dsg-reader-header {
+	box-sizing: border-box;
+	padding: 12px;
+	border: 1px solid var(--wp--preset--color--rule, #d3c9ad);
+	background: var(--wp--preset--color--paper-edge, #ebe2c8);
+	color: var(--wp--preset--color--ink, #2a2620);
+	font-family: var(--wp--preset--font-family--mono, monospace);
+}
+
+.wp-block-dsg-reader-header .dsg-bar {
+	position: static;
+	height: auto;
+	padding: 0;
+	border: 0;
+}
+
+.wp-block-dsg-reader-header .dsg-top-inner {
+	display: grid;
+	grid-template-columns: minmax(180px, 1fr) auto minmax(72px, 1fr);
+	align-items: center;
+	gap: 24px;
+	width: 100%;
+	min-height: 42px;
+}
+
+.wp-block-dsg-reader-header .dsg-site-mark {
+	color: var(--wp--preset--color--ink, #2a2620);
+	font-family: var(--wp--preset--font-family--serif, Georgia, serif);
+	font-size: 14px;
+	font-style: italic;
+	text-decoration: none;
+}
+
+.wp-block-dsg-reader-header .dsg-section-nav {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 18px;
+}
+
+.wp-block-dsg-reader-header .dsg-section-nav a {
+	color: var(--wp--preset--color--ink-soft, #5b5446);
+	font-size: 10px;
+	letter-spacing: 0.08em;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+
+.wp-block-dsg-reader-header .dsg-top-actions {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.wp-block-dsg-reader-header .dsg-reader-trigger {
+	border: 0;
+	background: transparent;
+	color: var(--wp--preset--color--ink-soft, #5b5446);
+	font-family: var(--wp--preset--font-family--serif, Georgia, serif);
+	font-size: 16px;
+}
+
+.wp-block-dsg-reader-header .dsg-reader-panel {
+	display: none;
+}
+
+.dsg-reader-header-row-controls {
+	margin-bottom: 18px;
+	padding-bottom: 18px;
+	border-bottom: 1px solid #ddd;
+}

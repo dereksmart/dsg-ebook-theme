@@ -1,0 +1,83 @@
+.wp-block-dsg-book-cover {
+	box-sizing: border-box;
+	border: 1px solid var(--wp--preset--color--rule, #d3c9ad);
+	background: var(--wp--preset--color--paper, #f3ecd8);
+	color: var(--wp--preset--color--ink, #2a2620);
+	font-family: var(--wp--preset--font-family--serif, Georgia, serif);
+}
+
+.wp-block-dsg-book-cover .dsg-cover {
+	min-height: 520px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 48px 28px;
+	border-bottom: 0;
+	text-align: center;
+}
+
+.wp-block-dsg-book-cover .dsg-cover-pub {
+	margin: 0 0 28px;
+	color: var(--wp--preset--color--ink-faint, #8a836f);
+	font-family: var(--wp--preset--font-family--mono, monospace);
+	font-size: 11px;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+}
+
+.wp-block-dsg-book-cover .dsg-cover-title {
+	margin: 0;
+	color: var(--wp--preset--color--ink, #2a2620);
+	font-size: 58px;
+	font-style: italic;
+	font-weight: 400;
+	letter-spacing: 0;
+	line-height: 1;
+}
+
+.wp-block-dsg-book-cover .dsg-cover-subtitle {
+	max-width: 24ch;
+	margin: 24px auto 0;
+	color: var(--wp--preset--color--ink-soft, #5b5446);
+	font-size: 22px;
+	font-style: italic;
+	line-height: 1.3;
+}
+
+.wp-block-dsg-book-cover .dsg-cover-author {
+	margin: 42px 0 0;
+	color: var(--wp--preset--color--ink-soft, #5b5446);
+	font-size: 13px;
+	letter-spacing: 0.18em;
+	line-height: 1.4;
+	text-transform: uppercase;
+}
+
+.wp-block-dsg-book-cover .dsg-cover-author strong {
+	display: block;
+	margin-top: 6px;
+	color: var(--wp--preset--color--ink, #2a2620);
+	font-size: 17px;
+	font-weight: 500;
+	letter-spacing: 0.06em;
+}
+
+.wp-block-dsg-book-cover .dsg-cover-meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+	justify-content: center;
+	margin-top: 44px;
+	color: var(--wp--preset--color--ink-faint, #8a836f);
+	font-family: var(--wp--preset--font-family--mono, monospace);
+	font-size: 10px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+.wp-block-dsg-book-cover .dsg-cover-meta span:not(:first-child)::before {
+	content: '·';
+	margin-right: 20px;
+	color: var(--wp--preset--color--rule, #d3c9ad);
+}

@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const DSG_EREADER_VERSION = '0.1.17';
+const DSG_EREADER_VERSION = '0.1.19';
 
 /**
  * Theme support.
@@ -152,6 +152,30 @@ function dsg_ebook_register_blocks() {
 		)
 	);
 	register_block_type(
+		__DIR__ . '/blocks/book-cover',
+		array(
+			'render_callback' => 'dsg_ebook_render_book_cover',
+		)
+	);
+	register_block_type(
+		__DIR__ . '/blocks/contents',
+		array(
+			'render_callback' => 'dsg_ebook_render_contents',
+		)
+	);
+	register_block_type(
+		__DIR__ . '/blocks/reader-header',
+		array(
+			'render_callback' => 'dsg_ebook_render_reader_header',
+		)
+	);
+	register_block_type(
+		__DIR__ . '/blocks/reader-footer',
+		array(
+			'render_callback' => 'dsg_ebook_render_reader_footer',
+		)
+	);
+	register_block_type(
 		__DIR__ . '/blocks/page-chapter',
 		array(
 			'render_callback' => 'dsg_ebook_render_page_chapter',
@@ -190,6 +214,290 @@ function dsg_ebook_render_editor_block_notice( $heading, $message ) {
 	</div>
 	<?php
 	return ob_get_clean();
+}
+
+/**
+ * Render the fixed reader header chrome.
+ */
+function dsg_ebook_render_reader_header( $attributes ) {
+	$site_label           = isset( $attributes['siteLabel'] ) && '' !== $attributes['siteLabel'] ? $attributes['siteLabel'] : get_bloginfo( 'name' );
+	$site_href            = isset( $attributes['siteHref'] ) && '' !== $attributes['siteHref'] ? $attributes['siteHref'] : home_url( '/' );
+	$show_reader_settings = ! array_key_exists( 'showReaderSettings', $attributes ) || ! empty( $attributes['showReaderSettings'] );
+	$nav_items            = dsg_ebook_normalize_nav_items(
+		isset( $attributes['navItems'] ) && is_array( $attributes['navItems'] ) ? $attributes['navItems'] : array(
+			array(
+				'label' => 'Contents',
+				'href'  => '/#contents',
+			),
+			array(
+				'label' => 'Works',
+				'href'  => '/#works',
+			),
+			array(
+				'label' => 'Essays',
+				'href'  => '/#essays',
+			),
+		)
+	);
+
+	ob_start();
+	?>
+	<div class="wp-block-dsg-reader-header wp-block-group dsg-bar dsg-top">
+		<div class="dsg-top-inner">
+			<a class="dsg-site-mark" href="<?php echo esc_url( $site_href ); ?>"><?php echo esc_html( $site_label ); ?></a>
+			<?php if ( ! empty( $nav_items ) ) : ?>
+				<nav class="dsg-section-nav" aria-label="Sections">
+					<?php foreach ( $nav_items as $item ) : ?>
+						<a href="<?php echo esc_url( $item['href'] ); ?>"><?php echo esc_html( $item['label'] ); ?></a>
+					<?php endforeach; ?>
+				</nav>
+			<?php endif; ?>
+			<div class="dsg-top-actions">
+				<?php if ( $show_reader_settings ) : ?>
+					<button class="dsg-reader-trigger" type="button" id="dsg-reader-trigger" aria-label="Reader settings" aria-expanded="false" aria-controls="dsg-reader-panel">A<span>a</span></button>
+					<div class="dsg-reader-panel" id="dsg-reader-panel" role="dialog" aria-label="Reader settings" aria-hidden="true">
+						<div class="dsg-reader-row">
+							<div class="dsg-reader-label">Text size</div>
+							<div class="dsg-reader-stepper">
+								<button class="dsg-reader-btn dsg-type-smaller" type="button" id="dsg-type-dec" aria-label="Decrease text size">A</button>
+								<span class="dsg-type-status" id="dsg-type-status" aria-live="polite">100%</span>
+								<button class="dsg-reader-btn dsg-type-larger" type="button" id="dsg-type-inc" aria-label="Increase text size">A</button>
+							</div>
+						</div>
+						<div class="dsg-reader-row">
+							<div class="dsg-reader-label">Font</div>
+							<div class="dsg-reader-choices dsg-reader-fonts" id="dsg-font-choices" aria-label="Reader font">
+								<button class="dsg-reader-choice dsg-font-serif" type="button" data-reader-font="serif" aria-pressed="true">Serif</button>
+								<button class="dsg-reader-choice dsg-font-sans" type="button" data-reader-font="sans" aria-pressed="false">Sans</button>
+								<button class="dsg-reader-choice dsg-font-mono" type="button" data-reader-font="mono" aria-pressed="false">Mono</button>
+							</div>
+						</div>
+						<div class="dsg-reader-row">
+							<div class="dsg-reader-label">Theme</div>
+							<div class="dsg-reader-choices dsg-reader-themes" id="dsg-theme-choices" aria-label="Reader theme">
+								<button class="dsg-reader-choice" type="button" data-reader-theme="light" aria-pressed="true">Light</button>
+								<button class="dsg-reader-choice" type="button" data-reader-theme="dark" aria-pressed="false">Dark</button>
+							</div>
+						</div>
+					</div>
+				<?php endif; ?>
+			</div>
+		</div>
+	</div>
+	<?php
+	return ob_get_clean();
+}
+
+/**
+ * Render the fixed reader footer progress chrome.
+ */
+function dsg_ebook_render_reader_footer( $attributes ) {
+	$initial_percent = isset( $attributes['initialPercent'] ) && '' !== $attributes['initialPercent'] ? $attributes['initialPercent'] : '0%';
+	$initial_time    = isset( $attributes['initialTimeLeft'] ) && '' !== $attributes['initialTimeLeft'] ? $attributes['initialTimeLeft'] : 'about 2m left';
+
+	ob_start();
+	?>
+	<div class="wp-block-dsg-reader-footer wp-block-group dsg-bar dsg-bottom">
+		<div class="dsg-footer-inner">
+			<span class="dsg-progress-pct" id="dsg-pct"><?php echo esc_html( $initial_percent ); ?></span>
+			<div class="dsg-progress" aria-hidden="true"><div class="dsg-progress-fill" id="dsg-fill"></div></div>
+			<span class="dsg-time-left" id="dsg-time-left"><?php echo esc_html( $initial_time ); ?></span>
+		</div>
+	</div>
+	<?php
+	return ob_get_clean();
+}
+
+/**
+ * Render the homepage book-cover block.
+ */
+function dsg_ebook_render_book_cover( $attributes ) {
+	$edition          = isset( $attributes['edition'] ) ? $attributes['edition'] : 'Digital Edition · 2026 · Self-Published';
+	$title            = isset( $attributes['title'] ) && '' !== $attributes['title'] ? $attributes['title'] : "Collected\nWorks";
+	$use_site_tagline = ! array_key_exists( 'useSiteTagline', $attributes ) || ! empty( $attributes['useSiteTagline'] );
+	$subtitle         = $use_site_tagline ? get_bloginfo( 'description' ) : ( isset( $attributes['subtitle'] ) ? $attributes['subtitle'] : '' );
+	$author_label     = isset( $attributes['authorLabel'] ) ? $attributes['authorLabel'] : 'written by';
+	$author_name      = isset( $attributes['authorName'] ) ? $attributes['authorName'] : 'DEREK SMART-GORDON';
+	$meta_items       = dsg_ebook_normalize_text_items(
+		isset( $attributes['metaItems'] ) && is_array( $attributes['metaItems'] ) ? $attributes['metaItems'] : array(
+			'essays & projects',
+			'selected works',
+			'assembled in Portland, Maine',
+		)
+	);
+	$title_lines      = array_filter(
+		array_map( 'trim', preg_split( '/\R/', $title ) ),
+		function ( $line ) {
+			return '' !== $line;
+		}
+	);
+
+	if ( empty( $title_lines ) ) {
+		$title_lines = array( get_bloginfo( 'name' ) );
+	}
+
+	$title_html = implode( '<br>', array_map( 'esc_html', $title_lines ) );
+
+	ob_start();
+	?>
+	<section class="wp-block-dsg-book-cover wp-block-group dsg-cover">
+		<?php if ( '' !== $edition ) : ?>
+			<p class="has-text-align-center dsg-cover-pub"><?php echo esc_html( $edition ); ?></p>
+		<?php endif; ?>
+
+		<h1 class="wp-block-heading has-text-align-center dsg-cover-title"><?php echo $title_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></h1>
+
+		<?php if ( '' !== $subtitle ) : ?>
+			<p class="has-text-align-center dsg-cover-subtitle"><?php echo esc_html( $subtitle ); ?></p>
+		<?php endif; ?>
+
+		<?php if ( '' !== $author_label || '' !== $author_name ) : ?>
+			<p class="has-text-align-center dsg-cover-author">
+				<?php echo esc_html( $author_label ); ?>
+				<?php if ( '' !== $author_name ) : ?>
+					<br><strong><?php echo esc_html( $author_name ); ?></strong>
+				<?php endif; ?>
+			</p>
+		<?php endif; ?>
+
+		<?php if ( ! empty( $meta_items ) ) : ?>
+			<div class="dsg-cover-meta">
+				<?php foreach ( $meta_items as $item ) : ?>
+					<span><?php echo esc_html( $item ); ?></span>
+				<?php endforeach; ?>
+			</div>
+		<?php endif; ?>
+	</section>
+	<?php
+	return ob_get_clean();
+}
+
+/**
+ * Render the homepage contents block.
+ */
+function dsg_ebook_render_contents( $attributes ) {
+	$id      = isset( $attributes['id'] ) && '' !== $attributes['id'] ? sanitize_title( $attributes['id'] ) : 'contents';
+	$heading = isset( $attributes['heading'] ) && '' !== $attributes['heading'] ? $attributes['heading'] : 'Contents';
+	$items   = dsg_ebook_normalize_contents_items(
+		isset( $attributes['items'] ) && is_array( $attributes['items'] ) ? $attributes['items'] : array()
+	);
+
+	if ( empty( $items ) ) {
+		return dsg_ebook_render_editor_block_notice(
+			'Contents',
+			'Add at least one contents row in the block settings.'
+		);
+	}
+
+	ob_start();
+	?>
+	<nav id="<?php echo esc_attr( $id ); ?>" class="wp-block-dsg-contents wp-block-group dsg-toc" aria-label="<?php echo esc_attr( $heading ); ?>">
+		<h2 class="wp-block-heading has-text-align-center dsg-toc-heading"><?php echo esc_html( $heading ); ?></h2>
+		<ul class="dsg-toc-list">
+			<?php foreach ( $items as $item ) : ?>
+				<li>
+					<?php if ( '' !== $item['label'] ) : ?>
+						<span class="dsg-toc-roman"><?php echo esc_html( $item['label'] ); ?></span>
+					<?php endif; ?>
+
+					<?php if ( '' !== $item['href'] ) : ?>
+						<a class="dsg-toc-name" href="<?php echo esc_url( $item['href'] ); ?>">
+							<?php echo esc_html( $item['title'] ); ?>
+							<?php if ( '' !== $item['subtitle'] ) : ?>
+								<small><?php echo esc_html( $item['subtitle'] ); ?></small>
+							<?php endif; ?>
+						</a>
+					<?php else : ?>
+						<span class="dsg-toc-name">
+							<?php echo esc_html( $item['title'] ); ?>
+							<?php if ( '' !== $item['subtitle'] ) : ?>
+								<small><?php echo esc_html( $item['subtitle'] ); ?></small>
+							<?php endif; ?>
+						</span>
+					<?php endif; ?>
+
+					<?php if ( '' !== $item['marker'] ) : ?>
+						<span class="dsg-toc-pct"><?php echo esc_html( $item['marker'] ); ?></span>
+					<?php endif; ?>
+				</li>
+			<?php endforeach; ?>
+		</ul>
+	</nav>
+	<?php
+	return ob_get_clean();
+}
+
+/**
+ * Normalize a list of text values from block attributes.
+ */
+function dsg_ebook_normalize_text_items( $items ) {
+	return array_values(
+		array_filter(
+			array_map(
+				function ( $item ) {
+					return is_scalar( $item ) ? trim( (string) $item ) : '';
+				},
+				$items
+			),
+			function ( $item ) {
+				return '' !== $item;
+			}
+		)
+	);
+}
+
+/**
+ * Normalize contents rows from block attributes.
+ */
+function dsg_ebook_normalize_contents_items( $items ) {
+	$normalized = array();
+
+	foreach ( $items as $item ) {
+		if ( ! is_array( $item ) ) {
+			continue;
+		}
+
+		$title = isset( $item['title'] ) ? trim( (string) $item['title'] ) : '';
+		if ( '' === $title ) {
+			continue;
+		}
+
+		$normalized[] = array(
+			'label'    => isset( $item['label'] ) ? trim( (string) $item['label'] ) : '',
+			'href'     => isset( $item['href'] ) ? trim( (string) $item['href'] ) : '',
+			'title'    => $title,
+			'subtitle' => isset( $item['subtitle'] ) ? trim( (string) $item['subtitle'] ) : '',
+			'marker'   => isset( $item['marker'] ) ? trim( (string) $item['marker'] ) : '',
+		);
+	}
+
+	return $normalized;
+}
+
+/**
+ * Normalize header nav rows from block attributes.
+ */
+function dsg_ebook_normalize_nav_items( $items ) {
+	$normalized = array();
+
+	foreach ( $items as $item ) {
+		if ( ! is_array( $item ) ) {
+			continue;
+		}
+
+		$label = isset( $item['label'] ) ? trim( (string) $item['label'] ) : '';
+		$href  = isset( $item['href'] ) ? trim( (string) $item['href'] ) : '';
+		if ( '' === $label || '' === $href ) {
+			continue;
+		}
+
+		$normalized[] = array(
+			'label' => $label,
+			'href'  => $href,
+		);
+	}
+
+	return $normalized;
 }
 
 /**

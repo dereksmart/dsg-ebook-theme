@@ -1,0 +1,28 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dsg/reader-footer",
+	"version": "0.1.0",
+	"title": "Reader Footer",
+	"category": "theme",
+	"icon": "minus",
+	"description": "Render the fixed ereader footer progress chrome.",
+	"textdomain": "dsg-ereader",
+	"attributes": {
+		"initialPercent": {
+			"type": "string",
+			"default": "0%"
+		},
+		"initialTimeLeft": {
+			"type": "string",
+			"default": "about 2m left"
+		}
+	},
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./editor.css"
+}

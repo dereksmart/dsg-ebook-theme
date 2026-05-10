@@ -1,0 +1,61 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dsg/contents",
+	"version": "0.1.0",
+	"title": "Reader Contents",
+	"category": "theme",
+	"icon": "list-view",
+	"description": "Render the homepage table of contents without raw HTML.",
+	"textdomain": "dsg-ereader",
+	"attributes": {
+		"id": {
+			"type": "string",
+			"default": "contents"
+		},
+		"heading": {
+			"type": "string",
+			"default": "Contents"
+		},
+		"items": {
+			"type": "array",
+			"default": [
+				{
+					"label": "i.",
+					"href": "#about",
+					"title": "About the Author",
+					"subtitle": "a short, mostly accurate biography",
+					"marker": "page"
+				},
+				{
+					"label": "ii.",
+					"href": "#works",
+					"title": "Selected Works",
+					"subtitle": "projects worth pointing at",
+					"marker": "page"
+				},
+				{
+					"label": "iii.",
+					"href": "#essays",
+					"title": "Essays",
+					"subtitle": "occasional writing, in reverse chronological",
+					"marker": "posts"
+				},
+				{
+					"label": "iv.",
+					"href": "#coda",
+					"title": "Coda",
+					"subtitle": "where to find me, how to get in touch",
+					"marker": "end"
+				}
+			]
+		}
+	},
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./editor.css"
+}

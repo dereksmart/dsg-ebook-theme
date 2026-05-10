@@ -1,0 +1,52 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dsg/book-cover",
+	"version": "0.1.0",
+	"title": "Book Cover",
+	"category": "theme",
+	"icon": "book-alt",
+	"description": "Render the homepage cover as an ereader book cover.",
+	"textdomain": "dsg-ereader",
+	"attributes": {
+		"edition": {
+			"type": "string",
+			"default": "Digital Edition · 2026 · Self-Published"
+		},
+		"title": {
+			"type": "string",
+			"default": "Collected\nWorks"
+		},
+		"useSiteTagline": {
+			"type": "boolean",
+			"default": true
+		},
+		"subtitle": {
+			"type": "string",
+			"default": ""
+		},
+		"authorLabel": {
+			"type": "string",
+			"default": "written by"
+		},
+		"authorName": {
+			"type": "string",
+			"default": "DEREK SMART-GORDON"
+		},
+		"metaItems": {
+			"type": "array",
+			"default": [
+				"essays & projects",
+				"selected works",
+				"assembled in Portland, Maine"
+			]
+		}
+	},
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./editor.css"
+}

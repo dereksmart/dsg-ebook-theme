@@ -125,6 +125,13 @@ Acceptance criteria:
 
 Goal: reduce raw Custom HTML and make the homepage easier to understand.
 
+Progress:
+
+- `patterns/homepage-reader.php` is now the canonical git-owned homepage composition.
+- `dsg/book-cover` and `dsg/contents` replace the cover and table-of-contents raw template markup.
+- `dsg/reader-header` and `dsg/reader-footer` replace the header/footer Custom HTML blocks.
+- Coda still uses core blocks plus a small Custom HTML ornament and can be cleaned up in the next Phase 2 slice.
+
 Scope:
 
 - Create a canonical `patterns/homepage-reader.php`.
