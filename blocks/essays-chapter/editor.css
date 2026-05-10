@@ -1,0 +1,48 @@
+.wp-block-dsg-essays-chapter {
+	box-sizing: border-box;
+	padding: 28px;
+	border: 1px solid var(--wp--preset--color--rule, #d3c9ad);
+	background: var(--wp--preset--color--paper, #f3ecd8);
+	color: var(--wp--preset--color--ink, #2a2620);
+	font-family: var(--wp--preset--font-family--serif, Georgia, serif);
+}
+
+.wp-block-dsg-essays-chapter .dsg-essays-chapter {
+	margin: 0 auto;
+	max-width: 680px;
+}
+
+.wp-block-dsg-essays-chapter .dsg-chapter-num,
+.wp-block-dsg-essays-chapter .dsg-chapter-dek,
+.wp-block-dsg-essays-chapter .dsg-essay-date,
+.wp-block-dsg-essays-chapter .dsg-ornament {
+	color: var(--wp--preset--color--ink-soft, #5b5446);
+	font-family: var(--wp--preset--font-family--mono, monospace);
+	font-size: 12px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.wp-block-dsg-essays-chapter .dsg-chapter-title {
+	margin: 10px 0 12px;
+	font-size: 34px;
+	line-height: 1.12;
+}
+
+.wp-block-dsg-essays-chapter .dsg-essays {
+	margin-top: 18px;
+}
+
+.wp-block-dsg-essays-chapter .dsg-essay-row {
+	display: flex;
+	gap: 16px;
+	justify-content: space-between;
+	padding: 14px 0;
+	border-bottom: 1px dotted var(--wp--preset--color--rule, #d3c9ad);
+}
+
+.wp-block-dsg-essays-chapter .dsg-essay-title {
+	margin: 0;
+	font-size: 22px;
+	font-weight: 400;
+}

@@ -1,0 +1,64 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dsg/essays-chapter",
+	"version": "0.1.0",
+	"title": "Essays Chapter",
+	"category": "theme",
+	"icon": "welcome-write-blog",
+	"description": "Render recent Posts as an ereader essays chapter.",
+	"textdomain": "dsg-ereader",
+	"attributes": {
+		"id": {
+			"type": "string",
+			"default": "essays"
+		},
+		"chapter": {
+			"type": "string",
+			"default": "Chapter Three"
+		},
+		"title": {
+			"type": "string",
+			"default": "Essays"
+		},
+		"dek": {
+			"type": "string",
+			"default": "occasional writing, in reverse chronological"
+		},
+		"perPage": {
+			"type": "number",
+			"default": 5
+		},
+		"order": {
+			"type": "string",
+			"default": "desc"
+		},
+		"orderBy": {
+			"type": "string",
+			"default": "date"
+		},
+		"dateFormat": {
+			"type": "string",
+			"default": "M Y"
+		},
+		"emptyText": {
+			"type": "string",
+			"default": "No essays yet — watch this space."
+		},
+		"showDates": {
+			"type": "boolean",
+			"default": true
+		},
+		"showOrnament": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./editor.css"
+}

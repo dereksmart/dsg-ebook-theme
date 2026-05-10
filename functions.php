@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const DSG_EREADER_VERSION = '0.1.23';
+const DSG_EREADER_VERSION = '0.1.24';
 
 /**
  * Theme support.
@@ -185,6 +185,12 @@ function dsg_ebook_register_blocks() {
 		__DIR__ . '/blocks/projects-chapter',
 		array(
 			'render_callback' => 'dsg_ebook_render_projects_chapter',
+		)
+	);
+	register_block_type(
+		__DIR__ . '/blocks/essays-chapter',
+		array(
+			'render_callback' => 'dsg_ebook_render_essays_chapter',
 		)
 	);
 }
@@ -635,6 +641,74 @@ function dsg_ebook_render_projects_chapter( $attributes ) {
 		<?php endif; ?>
 	</section>
 	<?php
+	return ob_get_clean();
+}
+
+/**
+ * Render recent Posts as the homepage Essays chapter.
+ */
+function dsg_ebook_render_essays_chapter( $attributes ) {
+	$id            = isset( $attributes['id'] ) && '' !== $attributes['id'] ? sanitize_title( $attributes['id'] ) : 'essays';
+	$chapter       = isset( $attributes['chapter'] ) ? $attributes['chapter'] : 'Chapter Three';
+	$title         = isset( $attributes['title'] ) && '' !== $attributes['title'] ? $attributes['title'] : 'Essays';
+	$dek           = isset( $attributes['dek'] ) ? $attributes['dek'] : '';
+	$per_page      = isset( $attributes['perPage'] ) ? max( 1, min( 20, absint( $attributes['perPage'] ) ) ) : 5;
+	$order         = isset( $attributes['order'] ) && 'asc' === strtolower( $attributes['order'] ) ? 'ASC' : 'DESC';
+	$order_by      = isset( $attributes['orderBy'] ) ? sanitize_key( $attributes['orderBy'] ) : 'date';
+	$date_format   = isset( $attributes['dateFormat'] ) && '' !== $attributes['dateFormat'] ? $attributes['dateFormat'] : 'M Y';
+	$empty_text    = isset( $attributes['emptyText'] ) ? $attributes['emptyText'] : 'No essays yet — watch this space.';
+	$show_dates    = ! array_key_exists( 'showDates', $attributes ) || ! empty( $attributes['showDates'] );
+	$show_ornament = ! empty( $attributes['showOrnament'] );
+	$allowed_order = array( 'date', 'title', 'menu_order' );
+
+	if ( ! in_array( $order_by, $allowed_order, true ) ) {
+		$order_by = 'date';
+	}
+
+	$essays = new WP_Query(
+		array(
+			'post_type'           => 'post',
+			'post_status'         => 'publish',
+			'posts_per_page'      => $per_page,
+			'orderby'             => $order_by,
+			'order'               => $order,
+			'ignore_sticky_posts' => true,
+		)
+	);
+
+	ob_start();
+	?>
+	<section id="<?php echo esc_attr( $id ); ?>" class="dsg-chapter dsg-essays-chapter">
+		<?php if ( '' !== $chapter ) : ?>
+			<div class="dsg-chapter-num"><?php echo esc_html( $chapter ); ?></div>
+		<?php endif; ?>
+		<h2 class="dsg-chapter-title has-text-align-center"><?php echo esc_html( $title ); ?></h2>
+		<?php if ( '' !== $dek ) : ?>
+			<p class="dsg-chapter-dek has-text-align-center"><?php echo esc_html( $dek ); ?></p>
+		<?php endif; ?>
+		<?php if ( $essays->have_posts() ) : ?>
+			<div class="dsg-essays">
+					<?php while ( $essays->have_posts() ) : ?>
+						<?php $essays->the_post(); ?>
+						<article class="dsg-essay-row">
+							<h3 class="dsg-essay-title">
+								<a href="<?php echo esc_url( get_permalink() ); ?>"><?php echo esc_html( get_the_title() ); ?></a>
+							</h3>
+						<?php if ( $show_dates ) : ?>
+							<time class="dsg-essay-date" datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date( $date_format ) ); ?></time>
+						<?php endif; ?>
+					</article>
+				<?php endwhile; ?>
+			</div>
+		<?php elseif ( '' !== $empty_text ) : ?>
+			<p class="has-text-align-center dsg-essay-empty"><?php echo esc_html( $empty_text ); ?></p>
+		<?php endif; ?>
+		<?php if ( $show_ornament ) : ?>
+			<div class="dsg-ornament" aria-hidden="true">· · ·</div>
+		<?php endif; ?>
+	</section>
+	<?php
+	wp_reset_postdata();
 	return ob_get_clean();
 }
 

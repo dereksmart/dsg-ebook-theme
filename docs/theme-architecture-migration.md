@@ -64,6 +64,7 @@ Recommended structure after the theme rename:
 - `blocks/reader-footer/`: bottom progress chrome.
 - `blocks/page-chapter/`: pulls a selected Page into a homepage chapter.
 - `blocks/projects-chapter/`: pulls project data, initially via the Projects page bridge.
+- `blocks/essays-chapter/`: pulls recent Posts into the homepage Essays chapter.
 - `blocks/coda/`: optional; use if Coda needs controls beyond a normal Page chapter.
 
 Block implementation should use normal WordPress block conventions:
@@ -132,6 +133,7 @@ Progress:
 - `dsg/book-cover` and `dsg/contents` replace the cover and table-of-contents raw template markup.
 - `dsg/reader-header` and `dsg/reader-footer` replace the header/footer Custom HTML blocks.
 - The live homepage no longer references PHP pattern files; sections that should be editable in the Site Editor live directly in `templates/front-page.html`.
+- Essays now uses `dsg/essays-chapter` instead of inline Query markup in the front page template.
 - Coda now uses `dsg/page-chapter` and pulls editable content from the `coda` Page.
 
 Scope:

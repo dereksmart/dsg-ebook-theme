@@ -11,46 +11,7 @@
 
 	<!-- wp:dsg/projects-chapter {"slug":"projects","id":"works","chapter":"Chapter Two","title":"Selected Works","dek":"projects worth pointing at"} /-->
 
-	<!-- wp:group {"className":"dsg-essays-block","layout":{"type":"constrained"}} -->
-	<div id="essays" class="wp-block-group dsg-essays-block">
-
-		<!-- wp:paragraph {"align":"center","className":"dsg-chapter-num"} -->
-		<p class="has-text-align-center dsg-chapter-num">Chapter Three</p>
-		<!-- /wp:paragraph -->
-
-		<!-- wp:heading {"level":2,"className":"dsg-chapter-title","textAlign":"center"} -->
-		<h2 class="wp-block-heading has-text-align-center dsg-chapter-title">Essays</h2>
-		<!-- /wp:heading -->
-
-		<!-- wp:paragraph {"align":"center","className":"dsg-chapter-dek"} -->
-		<p class="has-text-align-center dsg-chapter-dek">occasional writing, in reverse chronological</p>
-		<!-- /wp:paragraph -->
-
-		<!-- wp:query {"queryId":1,"query":{"perPage":5,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","sticky":"","inherit":false}} -->
-		<div class="wp-block-query">
-
-			<!-- wp:post-template {"className":"dsg-essays"} -->
-
-				<!-- wp:group {"className":"dsg-essay-row","layout":{"type":"flex","justifyContent":"space-between","verticalAlignment":"baseline","flexWrap":"nowrap"}} -->
-				<div class="wp-block-group dsg-essay-row">
-					<!-- wp:post-title {"isLink":true,"className":"dsg-essay-title","level":3} /-->
-					<!-- wp:post-date {"className":"dsg-essay-date","format":"M Y"} /-->
-				</div>
-				<!-- /wp:group -->
-
-			<!-- /wp:post-template -->
-
-			<!-- wp:query-no-results -->
-				<!-- wp:paragraph {"align":"center","className":"dsg-essay-empty"} -->
-				<p class="has-text-align-center dsg-essay-empty">No essays yet — watch this space.</p>
-				<!-- /wp:paragraph -->
-			<!-- /wp:query-no-results -->
-
-		</div>
-		<!-- /wp:query -->
-
-	</div>
-	<!-- /wp:group -->
+	<!-- wp:dsg/essays-chapter {"id":"essays","chapter":"Chapter Three","title":"Essays","dek":"occasional writing, in reverse chronological","perPage":5,"order":"desc","orderBy":"date","dateFormat":"M Y","emptyText":"No essays yet — watch this space."} /-->
 
 	<!-- wp:dsg/page-chapter {"slug":"coda","id":"coda","chapter":"Coda","title":"Where to find me","dek":"brief and to the point","showOrnament":false} /-->
 
