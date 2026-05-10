@@ -2,7 +2,7 @@
 
 Last checked against staging with the WordPress REST API on 2026-05-10.
 
-Architecture note: the recommended implementation direction has shifted away from using Full Site Editing as the primary theme shell. See `docs/theme-architecture-migration.md` for the classic/hybrid theme migration plan that should happen before the later content-model cleanup.
+Architecture note: the recommended implementation direction is a real block theme with purpose-built custom blocks, not a classic PHP shell. See `docs/theme-architecture-migration.md` for the current theme architecture plan.
 
 ## Current State
 
@@ -47,8 +47,8 @@ Until `dsg_project` exists, the theme uses a `dsg/projects-chapter` dynamic bloc
 
 ## Migration Steps
 
-1. Convert the theme shell to a classic/hybrid PHP theme so users do not manage the book chrome through the Site Editor.
-2. Preserve the current frontend while making Posts and Pages the primary editing surfaces.
+1. Register real editor-facing blocks for the current `dsg/page-chapter` and `dsg/projects-chapter` renderers.
+2. Clean up the homepage template/pattern so users edit reader sections instead of raw HTML.
 3. Add a sibling `dsg-site-core` plugin for durable site content types.
 4. Register `dsg_project`, `project_area`, and the project meta fields.
 5. Migrate each current card from the Projects page into a Project post via REST.
