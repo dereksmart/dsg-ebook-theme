@@ -1,0 +1,512 @@
+/* ============================================================
+   DSG Ebook — reader.css
+   E-reader chrome and chapter content styling. Palette,
+   typography families, and content widths come from theme.json.
+   ============================================================ */
+
+/* ---------- dark theme: rebind preset color CSS vars ---------- */
+html[data-theme="dark"] {
+	--wp--preset--color--paper: #18171a;
+	--wp--preset--color--paper-edge: #1f1e22;
+	--wp--preset--color--ink: #d4cdb9;
+	--wp--preset--color--ink-soft: #9c9684;
+	--wp--preset--color--ink-faint: #645f55;
+	--wp--preset--color--rule: #2c2a2e;
+	--wp--preset--color--highlight: #4a3d12;
+	color-scheme: dark;
+}
+
+/* ---------- base body: status-bar offsets, paper grain ---------- */
+body {
+	padding-top: 44px;
+	padding-bottom: 56px;
+	min-height: 100vh;
+	-webkit-font-smoothing: antialiased;
+	background-color: var(--wp--preset--color--paper);
+	background-image:
+		radial-gradient(circle at 12% 18%, rgba(0,0,0,0.018) 0, transparent 40%),
+		radial-gradient(circle at 88% 72%, rgba(0,0,0,0.018) 0, transparent 40%);
+	transition: background-color 0.25s, color 0.25s;
+}
+::selection { background: var(--wp--preset--color--highlight); color: var(--wp--preset--color--ink); }
+
+/* ---------- top + bottom status bars ---------- */
+.dsg-bar {
+	position: fixed; left: 0; right: 0;
+	background: var(--wp--preset--color--paper-edge);
+	font-family: var(--wp--preset--font-family--mono);
+	font-size: 11px;
+	color: var(--wp--preset--color--ink-soft);
+	display: grid;
+	align-items: center;
+	z-index: 50;
+	transition: background 0.25s;
+}
+.dsg-bar.dsg-top {
+	top: 0; height: 44px;
+	border-bottom: 1px solid var(--wp--preset--color--rule);
+	grid-template-columns: 1fr auto 1fr;
+	padding: 0 18px;
+}
+.dsg-bar.dsg-bottom {
+	bottom: 0; height: 56px;
+	border-top: 1px solid var(--wp--preset--color--rule);
+	grid-template-columns: 1fr 2fr 1fr;
+	padding: 0 18px;
+}
+.dsg-bar-cell { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.dsg-bar-left { justify-self: start; }
+.dsg-bar-center { justify-self: center; }
+.dsg-bar-right { justify-self: end; }
+
+.dsg-bar-center .wp-block-site-title {
+	font-family: var(--wp--preset--font-family--serif);
+	font-style: italic;
+	font-size: 14px;
+	font-weight: 400;
+	letter-spacing: 0.01em;
+	color: var(--wp--preset--color--ink);
+}
+.dsg-bar-center .wp-block-site-title a { color: inherit; text-decoration: none; }
+
+.dsg-icon-btn {
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	color: var(--wp--preset--color--ink-soft);
+	font-family: var(--wp--preset--font-family--mono);
+	font-size: 14px;
+	line-height: 1;
+	padding: 6px 8px;
+}
+.dsg-icon-btn:hover { color: var(--wp--preset--color--ink); }
+.dsg-icon-btn.dsg-aa {
+	font-family: var(--wp--preset--font-family--serif);
+	font-size: 16px;
+	font-weight: 500;
+}
+.dsg-icon-btn.dsg-aa .dsg-aa-small { font-size: 11px; }
+
+.dsg-progress {
+	flex: 1;
+	height: 2px;
+	background: var(--wp--preset--color--rule);
+	position: relative;
+	min-width: 120px;
+	max-width: 360px;
+}
+.dsg-progress-fill {
+	position: absolute; left: 0; top: 0; bottom: 0;
+	background: var(--wp--preset--color--ink);
+	width: 0;
+	transition: width 0.15s linear;
+}
+.dsg-progress-pct {
+	color: var(--wp--preset--color--ink);
+	font-weight: 500;
+	min-width: 28px;
+}
+
+/* ---------- bookmark ribbon ---------- */
+.dsg-bookmark {
+	position: fixed; top: 44px; right: 28px;
+	width: 28px; height: 56px;
+	z-index: 49;
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	color: var(--wp--preset--color--ink-faint);
+	transition: color 0.2s, transform 0.2s;
+}
+.dsg-bookmark svg { width: 100%; height: 100%; display: block; }
+.dsg-bookmark:hover {
+	color: var(--wp--preset--color--bookmark);
+	transform: translateY(2px);
+}
+.dsg-bookmark.is-active { color: var(--wp--preset--color--bookmark); }
+
+/* ---------- page-turn arrows (desktop only) ---------- */
+.dsg-pageturn {
+	position: fixed; top: 50%;
+	transform: translateY(-50%);
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	color: var(--wp--preset--color--ink-faint);
+	font-family: var(--wp--preset--font-family--serif);
+	font-size: 28px;
+	padding: 24px 14px;
+	z-index: 40;
+	opacity: 0.4;
+	transition: opacity 0.2s, color 0.2s;
+}
+.dsg-pageturn:hover { opacity: 1; color: var(--wp--preset--color--ink); }
+.dsg-pageturn.dsg-pt-left { left: 8px; }
+.dsg-pageturn.dsg-pt-right { right: 8px; }
+
+/* ---------- popover (footnote / dictionary) ---------- */
+.dsg-popover {
+	position: fixed; left: 50%; bottom: 80px;
+	transform: translateX(-50%);
+	width: min(540px, calc(100% - 40px));
+	background: var(--wp--preset--color--paper);
+	color: var(--wp--preset--color--ink);
+	border: 1px solid var(--wp--preset--color--ink);
+	border-radius: 4px;
+	padding: 18px 20px 16px;
+	box-shadow: 0 24px 48px rgba(0,0,0,0.18);
+	z-index: 100;
+	display: none;
+}
+.dsg-popover.is-open { display: block; }
+.dsg-pop-label {
+	font-family: var(--wp--preset--font-family--mono);
+	font-size: 10px;
+	color: var(--wp--preset--color--ink-faint);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	margin-bottom: 8px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.dsg-pop-close {
+	background: none; border: none; cursor: pointer;
+	color: var(--wp--preset--color--ink-faint);
+	font-family: var(--wp--preset--font-family--mono);
+	font-size: 11px;
+	padding: 0;
+}
+.dsg-pop-close:hover { color: var(--wp--preset--color--ink); }
+.dsg-pop-word {
+	font-family: var(--wp--preset--font-family--serif);
+	font-style: italic;
+	font-size: 22px;
+	margin-bottom: 4px;
+}
+.dsg-pop-pron {
+	font-family: var(--wp--preset--font-family--serif);
+	font-size: 13px;
+	font-style: italic;
+	color: var(--wp--preset--color--ink-soft);
+	margin-bottom: 10px;
+}
+.dsg-pop-body {
+	font-family: var(--wp--preset--font-family--serif);
+	font-size: 15px;
+	line-height: 1.5;
+	color: var(--wp--preset--color--ink-soft);
+}
+
+/* ---------- cover (front page hero) ---------- */
+.dsg-cover {
+	min-height: calc(100vh - 100px);
+	display: grid;
+	align-content: center;
+	padding: 80px 32px;
+	text-align: center;
+	border-bottom: 1px solid var(--wp--preset--color--rule);
+}
+.dsg-cover-pub {
+	font-family: var(--wp--preset--font-family--mono);
+	font-size: 11px !important;
+	color: var(--wp--preset--color--ink-faint);
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	margin: 0 0 32px !important;
+}
+.dsg-cover-title {
+	font-family: var(--wp--preset--font-family--serif) !important;
+	font-style: italic !important;
+	font-weight: 400 !important;
+	font-size: clamp(48px, 8vw, 88px) !important;
+	line-height: 1 !important;
+	letter-spacing: -0.015em !important;
+	color: var(--wp--preset--color--ink) !important;
+}
+.dsg-cover-title a { color: inherit !important; text-decoration: none !important; }
+.dsg-cover-amp {
+	font-family: var(--wp--preset--font-family--serif) !important;
+	font-style: italic !important;
+	color: var(--wp--preset--color--ink-faint) !important;
+	font-size: clamp(28px, 4vw, 44px) !important;
+	margin: 18px 0 !important;
+}
+.dsg-cover-subtitle {
+	font-family: var(--wp--preset--font-family--serif) !important;
+	font-style: italic !important;
+	font-size: clamp(20px, 2.4vw, 28px) !important;
+	color: var(--wp--preset--color--ink-soft) !important;
+	line-height: 1.3 !important;
+	max-width: 24ch !important;
+	margin: 0 auto !important;
+}
+.dsg-cover-author {
+	margin-top: 56px !important;
+	font-family: var(--wp--preset--font-family--serif);
+	font-size: 14px !important;
+	color: var(--wp--preset--color--ink-soft);
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	line-height: 1.4 !important;
+}
+.dsg-cover-author strong {
+	display: block;
+	font-weight: 500;
+	color: var(--wp--preset--color--ink);
+	font-size: 18px;
+	margin-top: 6px;
+	letter-spacing: 0.06em;
+}
+.dsg-cover-meta {
+	margin-top: 56px;
+	font-family: var(--wp--preset--font-family--mono);
+	font-size: 10px;
+	color: var(--wp--preset--color--ink-faint);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	display: flex;
+	justify-content: center;
+	gap: 22px;
+	flex-wrap: wrap;
+}
+.dsg-cover-meta span:not(:first-child)::before {
+	content: '·';
+	margin-right: 22px;
+	color: var(--wp--preset--color--rule);
+}
+
+/* ---------- table of contents ---------- */
+.dsg-toc { padding: 96px 32px 64px; }
+.dsg-toc-heading {
+	font-family: var(--wp--preset--font-family--serif) !important;
+	font-style: italic !important;
+	font-weight: 400 !important;
+	font-size: 28px !important;
+	color: var(--wp--preset--color--ink-soft) !important;
+	letter-spacing: 0.06em;
+	margin: 0 auto 56px !important;
+}
+.dsg-toc-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	max-width: 680px;
+	margin: 0 auto;
+}
+.dsg-toc-list li {
+	display: grid;
+	grid-template-columns: 60px 1fr 80px;
+	gap: 18px;
+	align-items: baseline;
+	padding: 14px 0;
+	border-bottom: 1px dotted var(--wp--preset--color--rule);
+	cursor: pointer;
+	transition: background 0.15s;
+}
+.dsg-toc-list li:hover {
+	background: var(--wp--preset--color--paper-edge);
+}
+.dsg-toc-roman {
+	font-family: var(--wp--preset--font-family--serif);
+	font-style: italic;
+	color: var(--wp--preset--color--ink-faint);
+	font-size: 18px;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+.dsg-toc-name {
+	font-family: var(--wp--preset--font-family--serif);
+	font-size: 22px;
+}
+.dsg-toc-name small {
+	display: block;
+	font-size: 13px;
+	color: var(--wp--preset--color--ink-soft);
+	font-style: italic;
+	margin-top: 2px;
+	font-family: var(--wp--preset--font-family--serif);
+}
+.dsg-toc-pct {
+	font-family: var(--wp--preset--font-family--mono);
+	font-size: 11px;
+	color: var(--wp--preset--color--ink-faint);
+	text-align: right;
+}
+
+/* ---------- chapter (single posts and pages) ---------- */
+.dsg-main { padding: 0; }
+.dsg-chapter {
+	padding: 96px 32px 64px;
+}
+.dsg-chapter-num {
+	font-family: var(--wp--preset--font-family--serif);
+	font-style: italic;
+	color: var(--wp--preset--color--ink-faint);
+	font-size: 14px;
+	letter-spacing: 0.2em;
+	text-align: center;
+	margin-bottom: 8px;
+	text-transform: uppercase;
+}
+.dsg-chapter-title {
+	font-family: var(--wp--preset--font-family--serif) !important;
+	font-weight: 400 !important;
+	font-size: clamp(32px, 4vw, 44px) !important;
+	line-height: 1.1 !important;
+	letter-spacing: -0.01em !important;
+	margin: 0 0 8px !important;
+}
+.dsg-chapter-dek {
+	color: var(--wp--preset--color--ink-soft) !important;
+	font-style: italic !important;
+	margin: 0 0 56px !important;
+	max-width: 56ch;
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+
+.dsg-chapter-content > p:first-of-type::first-letter,
+.entry-content > p:first-of-type::first-letter {
+	font-family: var(--wp--preset--font-family--serif);
+	font-weight: 500;
+	float: left;
+	font-size: 4.4em;
+	line-height: 0.85;
+	padding: 0.08em 0.08em 0 0;
+	color: var(--wp--preset--color--ink);
+}
+.dsg-chapter-content p {
+	text-align: justify;
+	hyphens: auto;
+	margin-bottom: 1.1em;
+}
+
+/* ---------- inline formats ---------- */
+.dsg-highlight {
+	background: var(--wp--preset--color--highlight);
+	padding: 2px 1px;
+	border-radius: 1px;
+	box-decoration-break: clone;
+	-webkit-box-decoration-break: clone;
+	cursor: help;
+	position: relative;
+}
+html[data-theme="dark"] .dsg-highlight { background: rgba(232, 196, 80, 0.22); }
+.dsg-highlight[data-readers]:hover::after {
+	content: attr(data-readers) ' readers also highlighted this';
+	position: absolute; left: 0; bottom: calc(100% + 8px);
+	background: var(--wp--preset--color--ink);
+	color: var(--wp--preset--color--paper);
+	padding: 6px 10px;
+	font-family: var(--wp--preset--font-family--mono);
+	font-size: 10px;
+	letter-spacing: 0.04em;
+	white-space: nowrap;
+	border-radius: 2px;
+	pointer-events: none;
+	box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+	z-index: 30;
+}
+
+.dsg-define {
+	border-bottom: 1px dotted var(--wp--preset--color--ink-faint);
+	cursor: help;
+}
+
+.dsg-footnote-marker {
+	cursor: pointer;
+	font-family: var(--wp--preset--font-family--mono);
+	font-weight: 500;
+	font-size: 0.7em;
+	vertical-align: super;
+	background: var(--wp--preset--color--paper-edge);
+	color: var(--wp--preset--color--ink);
+	border-radius: 2px;
+	padding: 0 4px;
+	margin: 0 1px;
+	line-height: 1;
+}
+.dsg-footnote-marker:hover {
+	background: var(--wp--preset--color--ink);
+	color: var(--wp--preset--color--paper);
+}
+
+/* ---------- ornament between sections ---------- */
+.dsg-ornament {
+	text-align: center;
+	color: var(--wp--preset--color--ink-faint);
+	font-size: 16px;
+	letter-spacing: 0.6em;
+	padding: 24px 0 16px;
+	user-select: none;
+}
+
+/* ---------- essays + archive ---------- */
+.dsg-essays-block, .dsg-archive { padding: 96px 32px 64px; }
+.dsg-essays { list-style: none; padding: 0; margin: 0; }
+.dsg-essay-row {
+	padding: 22px 0 !important;
+	border-bottom: 1px dotted var(--wp--preset--color--rule);
+	align-items: baseline !important;
+}
+.dsg-essay-row:hover { background: var(--wp--preset--color--paper-edge); }
+.dsg-essay-title {
+	font-family: var(--wp--preset--font-family--serif) !important;
+	font-weight: 400 !important;
+	font-size: 22px !important;
+	line-height: 1.25 !important;
+	margin: 0 !important;
+}
+.dsg-essay-title a { color: inherit; text-decoration: none; border-bottom: none; }
+.dsg-essay-row:hover .dsg-essay-title { font-style: italic; }
+.dsg-essay-date {
+	font-family: var(--wp--preset--font-family--mono) !important;
+	font-size: 11px !important;
+	color: var(--wp--preset--color--ink-faint) !important;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	margin: 0 !important;
+}
+.dsg-archive-kicker {
+	font-family: var(--wp--preset--font-family--mono);
+	font-size: 11px;
+	color: var(--wp--preset--color--ink-faint);
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	margin: 0 0 8px !important;
+}
+.dsg-archive-title {
+	font-family: var(--wp--preset--font-family--serif) !important;
+	font-style: italic !important;
+	font-weight: 400 !important;
+	margin: 0 0 56px !important;
+}
+.dsg-pagination {
+	margin-top: 48px;
+	font-family: var(--wp--preset--font-family--mono);
+	font-size: 12px;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 720px) {
+	body { padding-top: 40px; padding-bottom: 52px; }
+	.dsg-bar.dsg-top { height: 40px; padding: 0 12px; }
+	.dsg-bar.dsg-bottom {
+		height: 52px;
+		padding: 0 12px;
+		grid-template-columns: 1fr 1fr;
+	}
+	.dsg-bar.dsg-bottom .dsg-bar-left { display: none; }
+	.dsg-bookmark { right: 14px; top: 40px; }
+	.dsg-pageturn { display: none; }
+	.dsg-cover { padding: 56px 24px; }
+	.dsg-chapter, .dsg-toc, .dsg-essays-block, .dsg-archive {
+		padding-left: 24px;
+		padding-right: 24px;
+	}
+	.dsg-toc-list li {
+		grid-template-columns: 40px 1fr 50px;
+		gap: 12px;
+	}
+}

@@ -1,0 +1,112 @@
+<!-- wp:template-part {"slug":"header","tagName":"header","area":"header"} /-->
+
+<!-- wp:group {"tagName":"main","className":"dsg-main","layout":{"type":"default"}} -->
+<main class="wp-block-group dsg-main">
+
+	<!-- wp:group {"className":"dsg-cover","layout":{"type":"constrained"}} -->
+	<div class="wp-block-group dsg-cover">
+
+		<!-- wp:paragraph {"className":"dsg-cover-pub","align":"center"} -->
+		<p class="has-text-align-center dsg-cover-pub">First Edition · 2026 · Self-Published</p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:site-title {"level":1,"className":"dsg-cover-title"} /-->
+
+		<!-- wp:paragraph {"className":"dsg-cover-amp","align":"center"} -->
+		<p class="has-text-align-center dsg-cover-amp">&amp;</p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:site-tagline {"className":"dsg-cover-subtitle","textAlign":"center"} /-->
+
+		<!-- wp:paragraph {"className":"dsg-cover-author","align":"center"} -->
+		<p class="has-text-align-center dsg-cover-author">written by<br><strong>DEREK SMART-GORDON</strong></p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:html -->
+		<div class="dsg-cover-meta">
+			<span>essays &amp; projects</span>
+			<span>est. read · several sittings</span>
+			<span>printed in Brooklyn</span>
+		</div>
+		<!-- /wp:html -->
+
+	</div>
+	<!-- /wp:group -->
+
+	<!-- wp:group {"className":"dsg-toc","layout":{"type":"constrained"}} -->
+	<div class="wp-block-group dsg-toc">
+
+		<!-- wp:heading {"level":2,"className":"dsg-toc-heading","textAlign":"center"} -->
+		<h2 class="wp-block-heading has-text-align-center dsg-toc-heading">Contents</h2>
+		<!-- /wp:heading -->
+
+		<!-- wp:html -->
+		<ul class="dsg-toc-list">
+			<li>
+				<span class="dsg-toc-roman">i.</span>
+				<span class="dsg-toc-name">About the Author<small>a short, mostly accurate, biography</small></span>
+				<span class="dsg-toc-pct">2%</span>
+			</li>
+			<li>
+				<span class="dsg-toc-roman">ii.</span>
+				<span class="dsg-toc-name">Selected Works<small>projects worth pointing at</small></span>
+				<span class="dsg-toc-pct">14%</span>
+			</li>
+			<li>
+				<span class="dsg-toc-roman">iii.</span>
+				<span class="dsg-toc-name">Essays<small>occasional writing, in reverse chronological</small></span>
+				<span class="dsg-toc-pct">38%</span>
+			</li>
+			<li>
+				<span class="dsg-toc-roman">iv.</span>
+				<span class="dsg-toc-name">Currently<small>reading, building, listening — updated weekly</small></span>
+				<span class="dsg-toc-pct">86%</span>
+			</li>
+			<li>
+				<span class="dsg-toc-roman">v.</span>
+				<span class="dsg-toc-name">Coda<small>where to find me, how to get in touch</small></span>
+				<span class="dsg-toc-pct">98%</span>
+			</li>
+		</ul>
+		<!-- /wp:html -->
+
+	</div>
+	<!-- /wp:group -->
+
+	<!-- wp:group {"className":"dsg-essays-block","layout":{"type":"constrained"}} -->
+	<div class="wp-block-group dsg-essays-block">
+
+		<!-- wp:heading {"level":2,"className":"dsg-toc-heading","textAlign":"center"} -->
+		<h2 class="wp-block-heading has-text-align-center dsg-toc-heading">Recent Essays</h2>
+		<!-- /wp:heading -->
+
+		<!-- wp:query {"queryId":1,"query":{"perPage":5,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","sticky":"","inherit":false}} -->
+		<div class="wp-block-query">
+
+			<!-- wp:post-template {"className":"dsg-essays"} -->
+
+				<!-- wp:group {"className":"dsg-essay-row","layout":{"type":"flex","justifyContent":"space-between","verticalAlignment":"baseline","flexWrap":"nowrap"}} -->
+				<div class="wp-block-group dsg-essay-row">
+					<!-- wp:post-title {"isLink":true,"className":"dsg-essay-title","level":3} /-->
+					<!-- wp:post-date {"className":"dsg-essay-date","format":"M Y"} /-->
+				</div>
+				<!-- /wp:group -->
+
+			<!-- /wp:post-template -->
+
+			<!-- wp:query-no-results -->
+				<!-- wp:paragraph {"align":"center","className":"dsg-essay-empty"} -->
+				<p class="has-text-align-center dsg-essay-empty">No essays yet — watch this space.</p>
+				<!-- /wp:paragraph -->
+			<!-- /wp:query-no-results -->
+
+		</div>
+		<!-- /wp:query -->
+
+	</div>
+	<!-- /wp:group -->
+
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer","area":"footer"} /-->

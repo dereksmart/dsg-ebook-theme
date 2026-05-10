@@ -1,0 +1,51 @@
+<!-- wp:template-part {"slug":"header","tagName":"header","area":"header"} /-->
+
+<!-- wp:group {"tagName":"main","className":"dsg-main","layout":{"type":"default"}} -->
+<main class="wp-block-group dsg-main">
+
+	<!-- wp:group {"className":"dsg-archive","layout":{"type":"constrained"}} -->
+	<div class="wp-block-group dsg-archive">
+
+		<!-- wp:paragraph {"align":"center","className":"dsg-archive-kicker"} -->
+		<p class="has-text-align-center dsg-archive-kicker">— archive —</p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:heading {"level":1,"textAlign":"center","className":"dsg-archive-title"} -->
+		<h1 class="wp-block-heading has-text-align-center dsg-archive-title">All Essays</h1>
+		<!-- /wp:heading -->
+
+		<!-- wp:query {"queryId":1,"query":{"perPage":50,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","inherit":true}} -->
+		<div class="wp-block-query">
+
+			<!-- wp:post-template {"className":"dsg-essays"} -->
+
+				<!-- wp:group {"className":"dsg-essay-row","layout":{"type":"flex","justifyContent":"space-between","verticalAlignment":"baseline","flexWrap":"nowrap"}} -->
+				<div class="wp-block-group dsg-essay-row">
+					<!-- wp:post-title {"isLink":true,"className":"dsg-essay-title","level":3} /-->
+					<!-- wp:post-date {"className":"dsg-essay-date","format":"M Y"} /-->
+				</div>
+				<!-- /wp:group -->
+
+			<!-- /wp:post-template -->
+
+			<!-- wp:query-pagination {"className":"dsg-pagination","layout":{"type":"flex","justifyContent":"space-between"}} -->
+				<!-- wp:query-pagination-previous {"label":"‹ previous"} /-->
+				<!-- wp:query-pagination-next {"label":"next ›"} /-->
+			<!-- /wp:query-pagination -->
+
+			<!-- wp:query-no-results -->
+				<!-- wp:paragraph {"align":"center","className":"dsg-essay-empty"} -->
+				<p class="has-text-align-center dsg-essay-empty">No essays yet — watch this space.</p>
+				<!-- /wp:paragraph -->
+			<!-- /wp:query-no-results -->
+
+		</div>
+		<!-- /wp:query -->
+
+	</div>
+	<!-- /wp:group -->
+
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer","area":"footer"} /-->
