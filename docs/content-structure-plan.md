@@ -2,6 +2,8 @@
 
 Last checked against staging with the WordPress REST API on 2026-05-10.
 
+Architecture note: the recommended implementation direction has shifted away from using Full Site Editing as the primary theme shell. See `docs/theme-architecture-migration.md` for the classic/hybrid theme migration plan that should happen before the later content-model cleanup.
+
 ## Current State
 
 - The homepage is now a theme-composed reader experience, not normal page content.
@@ -45,9 +47,10 @@ Until `dsg_project` exists, the theme uses a `dsg/projects-chapter` dynamic bloc
 
 ## Migration Steps
 
-1. Clean up the reader chrome and render the current Projects page as a linear section. Done in the theme via `dsg/projects-chapter`.
-2. Add a sibling `dsg-site-core` plugin for durable site content types.
-3. Register `dsg_project`, `project_area`, and the project meta fields.
-4. Migrate each current card from the Projects page into a Project post via REST.
-5. Replace the Projects page fallback with a `dsg/projects-chapter` dynamic block.
-6. Set duplicate/legacy pages such as `about-2` and old `home` to draft after confirming nothing links to them.
+1. Convert the theme shell to a classic/hybrid PHP theme so users do not manage the book chrome through the Site Editor.
+2. Preserve the current frontend while making Posts and Pages the primary editing surfaces.
+3. Add a sibling `dsg-site-core` plugin for durable site content types.
+4. Register `dsg_project`, `project_area`, and the project meta fields.
+5. Migrate each current card from the Projects page into a Project post via REST.
+6. Replace the Projects page fallback with structured project queries.
+7. Set duplicate/legacy pages such as `about-2` and old `home` to draft after confirming nothing links to them.
