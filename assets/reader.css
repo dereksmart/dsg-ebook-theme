@@ -565,6 +565,26 @@ body.admin-bar { --dsg-admin-bar-h: 32px; }
 
 /* ---------- chapter (single posts and pages) ---------- */
 .dsg-main { padding: 0; }
+body.single-post .dsg-main {
+	transform: translate3d(0, 0, 0);
+	transform-origin: center center;
+}
+body.single-post.dsg-is-swiping {
+	overflow-x: hidden;
+}
+body.single-post.dsg-is-swiping .dsg-main {
+	opacity: var(--dsg-swipe-opacity, 1);
+	transform: translate3d(var(--dsg-swipe-x, 0), 0, 0) rotateY(var(--dsg-swipe-tilt, 0deg));
+	transition: none;
+	will-change: transform, opacity;
+}
+body.single-post.dsg-swipe-cancel .dsg-main,
+body.single-post.dsg-swipe-commit .dsg-main {
+	opacity: var(--dsg-swipe-opacity, 1);
+	transform: translate3d(var(--dsg-swipe-x, 0), 0, 0) rotateY(var(--dsg-swipe-tilt, 0deg));
+	transition: transform 180ms ease-out, opacity 180ms ease-out;
+	will-change: transform, opacity;
+}
 .dsg-chapter {
 	box-sizing: border-box;
 	max-width: var(--dsg-page-width);

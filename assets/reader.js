@@ -121,8 +121,7 @@
 		}
 	}
 	function turnPage( dir ) {
-		var selector = dir < 0 ? '.dsg-essay-nav-prev:not(.is-empty)' : '.dsg-essay-nav-next:not(.is-empty)';
-		var link = document.querySelector( selector );
+		var link = getEssayTurnLink( dir );
 		if ( link && link.href ) {
 			window.location.href = link.href;
 			return;
@@ -131,6 +130,10 @@
 			return;
 		}
 		jumpSection( dir );
+	}
+	function getEssayTurnLink( dir ) {
+		var selector = dir < 0 ? '.dsg-essay-nav-prev:not(.is-empty)' : '.dsg-essay-nav-next:not(.is-empty)';
+		return document.querySelector( selector );
 	}
 	function jumpSection( dir ) {
 		var sections = document.querySelectorAll(
@@ -546,14 +549,16 @@
 		var lastY = 0;
 		var tracking = false;
 		var ignored = false;
+		var dragging = false;
 
 		document.addEventListener( 'touchstart', function ( e ) {
 			if ( e.touches.length !== 1 ) {
-				tracking = false;
+				resetSwipe();
 				return;
 			}
 			ignored = isSwipeTargetIgnored( e.target );
 			tracking = ! ignored;
+			dragging = false;
 			startX = e.touches[0].clientX;
 			startY = e.touches[0].clientY;
 			lastX = startX;
@@ -570,7 +575,19 @@
 			}
 			lastX = e.touches[0].clientX;
 			lastY = e.touches[0].clientY;
-		}, { passive: true } );
+			var dx = lastX - startX;
+			var dy = lastY - startY;
+			var absX = Math.abs( dx );
+			var absY = Math.abs( dy );
+			if ( ! dragging && absX > 12 && absX > absY * 1.2 ) {
+				dragging = true;
+				document.body.classList.add( 'dsg-is-swiping' );
+			}
+			if ( dragging ) {
+				e.preventDefault();
+				renderSwipe( dx );
+			}
+		}, { passive: false } );
 
 		document.addEventListener( 'touchend', function () {
 			if ( ! tracking || ignored ) {
@@ -581,11 +598,18 @@
 			var dy = lastY - startY;
 			var absX = Math.abs( dx );
 			var absY = Math.abs( dy );
-			resetSwipe();
-			if ( absX < 72 || absX < absY * 1.45 ) {
+			var dir = dx < 0 ? 1 : -1;
+			var link = getEssayTurnLink( dir );
+			if ( ! dragging || ! link || absX < 72 || absX < absY * 1.45 ) {
+				releaseSwipe( false );
+				resetSwipe();
 				return;
 			}
-			turnPage( dx < 0 ? 1 : -1 );
+			releaseSwipe( true, dir );
+			window.setTimeout( function () {
+				window.location.href = link.href;
+			}, 180 );
+			resetSwipe();
 		}, { passive: true } );
 
 		document.addEventListener( 'touchcancel', resetSwipe, { passive: true } );
@@ -597,7 +621,36 @@
 			startY = 0;
 			lastX = 0;
 			lastY = 0;
+			dragging = false;
 		}
+	}
+	function renderSwipe( dx ) {
+		var max = Math.min( window.innerWidth * 0.42, 180 );
+		var x = Math.max( -max, Math.min( max, dx ) );
+		var progress = Math.min( 1, Math.abs( x ) / max );
+		document.documentElement.style.setProperty( '--dsg-swipe-x', x.toFixed( 1 ) + 'px' );
+		document.documentElement.style.setProperty( '--dsg-swipe-tilt', ( x / max * -2.2 ).toFixed( 2 ) + 'deg' );
+		document.documentElement.style.setProperty( '--dsg-swipe-opacity', ( 1 - progress * 0.18 ).toFixed( 3 ) );
+	}
+	function releaseSwipe( commit, dir ) {
+		document.body.classList.remove( 'dsg-is-swiping' );
+		document.body.classList.add( commit ? 'dsg-swipe-commit' : 'dsg-swipe-cancel' );
+		if ( commit ) {
+			document.documentElement.style.setProperty( '--dsg-swipe-x', ( dir > 0 ? '-46vw' : '46vw' ) );
+			document.documentElement.style.setProperty( '--dsg-swipe-tilt', ( dir > 0 ? '4deg' : '-4deg' ) );
+			document.documentElement.style.setProperty( '--dsg-swipe-opacity', '0.14' );
+		} else {
+			document.documentElement.style.setProperty( '--dsg-swipe-x', '0px' );
+			document.documentElement.style.setProperty( '--dsg-swipe-tilt', '0deg' );
+			document.documentElement.style.setProperty( '--dsg-swipe-opacity', '1' );
+		}
+		window.setTimeout( clearSwipePresentation, commit ? 220 : 180 );
+	}
+	function clearSwipePresentation() {
+		document.body.classList.remove( 'dsg-is-swiping', 'dsg-swipe-cancel', 'dsg-swipe-commit' );
+		document.documentElement.style.removeProperty( '--dsg-swipe-x' );
+		document.documentElement.style.removeProperty( '--dsg-swipe-tilt' );
+		document.documentElement.style.removeProperty( '--dsg-swipe-opacity' );
 	}
 	function isSwipeTargetIgnored( target ) {
 		return !! (
