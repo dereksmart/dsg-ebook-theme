@@ -878,23 +878,32 @@ html[data-theme="dark"] .dsg-highlight { background: rgba(232, 196, 80, 0.22); }
 	font-size: 12px;
 }
 
-.dsg-coda-note {
+.dsg-page-content .dsg-coda-note {
 	font-family: var(--dsg-reader-font);
 	font-style: italic;
 	color: var(--wp--preset--color--ink-soft);
-	font-size: var(--dsg-coda-note-size);
+	font-size: var(--dsg-coda-note-size) !important;
+	line-height: 1.48 !important;
+	text-align: center;
 	max-width: 30ch;
 	margin: 0 auto 32px !important;
 }
-.dsg-coda-links {
+.dsg-page-content .dsg-coda-links {
 	font-family: var(--wp--preset--font-family--mono);
-	font-size: 13px;
+	font-size: 13px !important;
+	line-height: 1.8 !important;
+	text-align: center;
 	color: var(--wp--preset--color--ink-soft);
 	letter-spacing: 0.04em;
+	max-width: 100%;
+	overflow-wrap: anywhere;
 }
-.dsg-coda-links a {
+.dsg-page-content .dsg-coda-links a {
 	border-bottom: 1px solid var(--wp--preset--color--rule);
 	text-decoration: none;
+}
+.dsg-page-content .dsg-ornament {
+	text-align: center;
 }
 
 /* ---------- responsive ---------- */

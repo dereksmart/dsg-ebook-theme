@@ -55,12 +55,13 @@ Recommended structure after the theme rename:
 
 - `parts/header.html`: top reader/status chrome.
 - `parts/footer.html`: bottom progress chrome.
-- `templates/front-page.html`: assembled from reader blocks and/or a homepage pattern.
+- `templates/front-page.html`: canonical homepage composition assembled from reader blocks and section patterns.
 - `templates/single.html`: essay reading template.
 - `templates/page.html`: stable page reading template.
-- `patterns/homepage-reader.php`: default homepage composition.
 - `blocks/book-cover/`: cover block.
 - `blocks/contents/`: generated/manual contents block.
+- `blocks/reader-header/`: top reader/status chrome.
+- `blocks/reader-footer/`: bottom progress chrome.
 - `blocks/page-chapter/`: pulls a selected Page into a homepage chapter.
 - `blocks/projects-chapter/`: pulls project data, initially via the Projects page bridge.
 - `blocks/coda/`: optional; use if Coda needs controls beyond a normal Page chapter.
@@ -127,14 +128,16 @@ Goal: reduce raw Custom HTML and make the homepage easier to understand.
 
 Progress:
 
-- `patterns/homepage-reader.php` is now the canonical git-owned homepage composition.
+- `templates/front-page.html` is now the canonical git-owned homepage composition.
 - `dsg/book-cover` and `dsg/contents` replace the cover and table-of-contents raw template markup.
 - `dsg/reader-header` and `dsg/reader-footer` replace the header/footer Custom HTML blocks.
-- Coda still uses core blocks plus a small Custom HTML ornament and can be cleaned up in the next Phase 2 slice.
+- The live homepage no longer references PHP pattern files; sections that should be editable in the Site Editor live directly in `templates/front-page.html`.
+- Coda now uses `dsg/page-chapter` and pulls editable content from the `coda` Page.
 
 Scope:
 
-- Create a canonical `patterns/homepage-reader.php`.
+- Keep `templates/front-page.html` as the canonical homepage structure.
+- Use pattern files only as optional starter/inserter content, not for live homepage sections that should be edited in place.
 - Replace raw HTML sections with purpose-built blocks or clean core blocks.
 - Keep cover/contents/coda editable as blocks, not PHP settings.
 - Decide whether the front page template should be locked, partially locked, or simply pattern-seeded.

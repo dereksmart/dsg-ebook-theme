@@ -26,7 +26,7 @@
 			"status": "publish",
 			"date": "2026-05-10 09:20:00",
 			"excerpt": "Fixture contact chapter.",
-			"content": "<!-- wp:paragraph -->\n<p>This page exists as fixture content for a future coda/contact chapter block. It is not wired into the homepage template yet.</p>\n<!-- /wp:paragraph -->"
+			"content": "<!-- wp:paragraph {\"align\":\"center\",\"className\":\"dsg-coda-note\"} -->\n<p class=\"has-text-align-center dsg-coda-note\">If anything in here struck you, I'd like to hear about it.</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:paragraph {\"align\":\"center\",\"className\":\"dsg-coda-links\"} -->\n<p class=\"has-text-align-center dsg-coda-links\"><a href=\"mailto:smart@automattic.com\">smart@automattic.com</a> · <a href=\"https://github.com/dereksmart\">github</a> · <a href=\"https://www.linkedin.com/in/derek-smart/\">linkedin</a></p>\n<!-- /wp:paragraph -->\n\n<!-- wp:paragraph {\"align\":\"center\",\"className\":\"dsg-ornament\"} -->\n<p class=\"has-text-align-center dsg-ornament\">FIN.</p>\n<!-- /wp:paragraph -->"
 		}
 	],
 	"posts": [
