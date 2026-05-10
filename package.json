@@ -1,13 +1,14 @@
 {
-	"name": "dsg-ebook-theme",
+	"name": "dsg-ereader-theme",
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
 		"env:start": "wp-env start",
 		"env:stop": "wp-env stop",
 		"env:destroy": "wp-env destroy --yes",
-		"env:activate": "wp-env run cli wp theme activate dsg-ebook-theme",
-		"env:seed": "scripts/sync-staging-content.sh",
+		"env:activate": "wp-env run cli wp theme activate dsg-ereader-theme",
+		"env:seed": "scripts/seed-fixtures.sh",
+		"env:seed:staging": "scripts/sync-staging-content.sh",
 		"env:reset": "npm run env:destroy && npm run env:start && npm run env:activate && npm run env:seed"
 	},
 	"devDependencies": {

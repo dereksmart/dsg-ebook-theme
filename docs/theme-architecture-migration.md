@@ -198,7 +198,7 @@ The user plans to rename the theme before the next architecture pass.
 
 Expected target name: `dsg-ereader-theme`.
 
-After the rename, update this plan if any paths or package names changed. The codebase currently still uses `dsg-ebook-theme`, `dsg-ebook`, `dsg_ebook_*`, and `DSG_EBOOK_*` names.
+The repo directory and local tooling now use `dsg-ereader-theme`. Some PHP internals still use the older `dsg_ebook_*` names; treat that as a mechanical cleanup task, not architecture work.
 
 Important rename caveat: changing the WordPress theme directory slug can disconnect Site Editor customizations stored under the old slug. Prefer canonical templates and patterns in git over preserving ad hoc Site Editor edits unless there is a specific customization worth migrating.
 

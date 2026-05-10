@@ -1,6 +1,6 @@
 <?php
 /**
- * DSG Ebook — theme bootstrap.
+ * DSG E-reader — theme bootstrap.
  *
  * The theme treats the whole site like a book. This file:
  *   - registers theme support and assets
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const DSG_EBOOK_VERSION = '0.1.16';
+const DSG_EREADER_VERSION = '0.1.17';
 
 /**
  * Theme support.
@@ -32,22 +32,22 @@ add_action( 'after_setup_theme', 'dsg_ebook_setup' );
  */
 function dsg_ebook_enqueue() {
 	wp_enqueue_style(
-		'dsg-ebook-fonts',
+		'dsg-ereader-fonts',
 		'https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400&family=JetBrains+Mono:wght@400;500&display=swap',
 		array(),
 		null
 	);
 	wp_enqueue_style(
-		'dsg-ebook-reader',
+		'dsg-ereader-reader',
 		get_theme_file_uri( 'assets/reader.css' ),
-		array( 'dsg-ebook-fonts' ),
-		DSG_EBOOK_VERSION
+		array( 'dsg-ereader-fonts' ),
+		DSG_EREADER_VERSION
 	);
 	wp_enqueue_script(
-		'dsg-ebook-reader',
+		'dsg-ereader-reader',
 		get_theme_file_uri( 'assets/reader.js' ),
 		array(),
-		DSG_EBOOK_VERSION,
+		DSG_EREADER_VERSION,
 		array(
 			'in_footer' => true,
 			'strategy'  => 'defer',
@@ -62,10 +62,10 @@ add_action( 'wp_enqueue_scripts', 'dsg_ebook_enqueue', 20 );
  */
 function dsg_ebook_enqueue_editor() {
 	wp_enqueue_script(
-		'dsg-ebook-formats',
+		'dsg-ereader-formats',
 		get_theme_file_uri( 'assets/editor-formats.js' ),
 		array( 'wp-rich-text', 'wp-element', 'wp-components', 'wp-block-editor', 'wp-i18n' ),
-		DSG_EBOOK_VERSION,
+		DSG_EREADER_VERSION,
 		true
 	);
 }
@@ -141,7 +141,7 @@ function dsg_ebook_preference_script() {
 add_action( 'wp_head', 'dsg_ebook_preference_script', 0 );
 
 /**
- * Register dynamic blocks. Currently just the chapter-number renderer.
+ * Register dynamic blocks.
  */
 function dsg_ebook_register_blocks() {
 	register_block_type(
@@ -152,36 +152,45 @@ function dsg_ebook_register_blocks() {
 		)
 	);
 	register_block_type(
-		'dsg/page-chapter',
+		__DIR__ . '/blocks/page-chapter',
 		array(
-			'api_version'     => 3,
-			'attributes'      => array(
-				'slug'    => array( 'type' => 'string' ),
-				'id'      => array( 'type' => 'string' ),
-				'chapter' => array( 'type' => 'string' ),
-				'title'   => array( 'type' => 'string' ),
-				'dek'     => array( 'type' => 'string' ),
-				'dropcap' => array( 'type' => 'boolean' ),
-			),
 			'render_callback' => 'dsg_ebook_render_page_chapter',
 		)
 	);
 	register_block_type(
-		'dsg/projects-chapter',
+		__DIR__ . '/blocks/projects-chapter',
 		array(
-			'api_version'     => 3,
-			'attributes'      => array(
-				'slug'    => array( 'type' => 'string' ),
-				'id'      => array( 'type' => 'string' ),
-				'chapter' => array( 'type' => 'string' ),
-				'title'   => array( 'type' => 'string' ),
-				'dek'     => array( 'type' => 'string' ),
-			),
 			'render_callback' => 'dsg_ebook_render_projects_chapter',
 		)
 	);
 }
 add_action( 'init', 'dsg_ebook_register_blocks' );
+
+/**
+ * Server-side block previews run through REST in the editor. Frontend missing
+ * sources should fail quiet, while editor previews should explain what to fix.
+ */
+function dsg_ebook_is_editor_preview_request() {
+	return is_admin() || ( defined( 'REST_REQUEST' ) && REST_REQUEST );
+}
+
+/**
+ * Render a small editor-facing block notice for dynamic block fallbacks.
+ */
+function dsg_ebook_render_editor_block_notice( $heading, $message ) {
+	if ( ! dsg_ebook_is_editor_preview_request() ) {
+		return '';
+	}
+
+	ob_start();
+	?>
+	<div class="dsg-editor-block-placeholder">
+		<strong><?php echo esc_html( $heading ); ?></strong>
+		<p><?php echo esc_html( $message ); ?></p>
+	</div>
+	<?php
+	return ob_get_clean();
+}
 
 /**
  * Render a front-page chapter from a normal WordPress page.
@@ -193,19 +202,26 @@ add_action( 'init', 'dsg_ebook_register_blocks' );
 function dsg_ebook_render_page_chapter( $attributes ) {
 	$slug = isset( $attributes['slug'] ) ? sanitize_title( $attributes['slug'] ) : '';
 	if ( '' === $slug ) {
-		return '';
+		return dsg_ebook_render_editor_block_notice(
+			'Page Chapter',
+			'Choose a source page in the block settings.'
+		);
 	}
 
 	$page = get_page_by_path( $slug );
 	if ( ! $page || 'publish' !== get_post_status( $page ) ) {
-		return '';
+		return dsg_ebook_render_editor_block_notice(
+			'Page Chapter',
+			sprintf( 'No published page found for the "%s" slug.', $slug )
+		);
 	}
 
-	$id      = isset( $attributes['id'] ) && '' !== $attributes['id'] ? sanitize_title( $attributes['id'] ) : $slug;
-	$chapter = isset( $attributes['chapter'] ) ? $attributes['chapter'] : '';
-	$title   = isset( $attributes['title'] ) && '' !== $attributes['title'] ? $attributes['title'] : get_the_title( $page );
-	$dek     = isset( $attributes['dek'] ) ? $attributes['dek'] : '';
-	$dropcap = ! empty( $attributes['dropcap'] );
+	$id            = isset( $attributes['id'] ) && '' !== $attributes['id'] ? sanitize_title( $attributes['id'] ) : $slug;
+	$chapter       = isset( $attributes['chapter'] ) ? $attributes['chapter'] : '';
+	$title         = isset( $attributes['title'] ) && '' !== $attributes['title'] ? $attributes['title'] : get_the_title( $page );
+	$dek           = isset( $attributes['dek'] ) ? $attributes['dek'] : '';
+	$dropcap       = ! empty( $attributes['dropcap'] );
+	$show_ornament = ! array_key_exists( 'showOrnament', $attributes ) || ! empty( $attributes['showOrnament'] );
 
 	$content = apply_filters( 'the_content', $page->post_content );
 	$content_class = 'dsg-page-content' . ( $dropcap ? ' has-dropcap' : '' );
@@ -223,7 +239,9 @@ function dsg_ebook_render_page_chapter( $attributes ) {
 		<div class="<?php echo esc_attr( $content_class ); ?>">
 			<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		</div>
-		<div class="dsg-ornament" aria-hidden="true">· · ·</div>
+		<?php if ( $show_ornament ) : ?>
+			<div class="dsg-ornament" aria-hidden="true">· · ·</div>
+		<?php endif; ?>
 	</section>
 	<?php
 	return ob_get_clean();
@@ -238,16 +256,28 @@ function dsg_ebook_render_page_chapter( $attributes ) {
  */
 function dsg_ebook_render_projects_chapter( $attributes ) {
 	$slug = isset( $attributes['slug'] ) ? sanitize_title( $attributes['slug'] ) : 'projects';
-	$page = get_page_by_path( $slug );
-	if ( ! $page || 'publish' !== get_post_status( $page ) ) {
-		return '';
+	if ( '' === $slug ) {
+		return dsg_ebook_render_editor_block_notice(
+			'Projects Chapter',
+			'Choose the temporary Projects source page in the block settings.'
+		);
 	}
 
-	$id      = isset( $attributes['id'] ) && '' !== $attributes['id'] ? sanitize_title( $attributes['id'] ) : 'works';
-	$chapter = isset( $attributes['chapter'] ) ? $attributes['chapter'] : '';
-	$title   = isset( $attributes['title'] ) && '' !== $attributes['title'] ? $attributes['title'] : get_the_title( $page );
-	$dek     = isset( $attributes['dek'] ) ? $attributes['dek'] : '';
-	$outline = dsg_ebook_project_outline_from_page( $page );
+	$page = get_page_by_path( $slug );
+	if ( ! $page || 'publish' !== get_post_status( $page ) ) {
+		return dsg_ebook_render_editor_block_notice(
+			'Projects Chapter',
+			sprintf( 'No published page found for the "%s" slug.', $slug )
+		);
+	}
+
+	$id            = isset( $attributes['id'] ) && '' !== $attributes['id'] ? sanitize_title( $attributes['id'] ) : 'works';
+	$chapter       = isset( $attributes['chapter'] ) ? $attributes['chapter'] : '';
+	$title         = isset( $attributes['title'] ) && '' !== $attributes['title'] ? $attributes['title'] : get_the_title( $page );
+	$dek           = isset( $attributes['dek'] ) ? $attributes['dek'] : '';
+	$show_intro    = ! array_key_exists( 'showIntro', $attributes ) || ! empty( $attributes['showIntro'] );
+	$show_ornament = ! array_key_exists( 'showOrnament', $attributes ) || ! empty( $attributes['showOrnament'] );
+	$outline       = dsg_ebook_project_outline_from_page( $page );
 
 	if ( empty( $outline['groups'] ) ) {
 		return dsg_ebook_render_page_chapter( $attributes );
@@ -263,7 +293,7 @@ function dsg_ebook_render_projects_chapter( $attributes ) {
 		<?php if ( '' !== $dek ) : ?>
 			<p class="dsg-chapter-dek has-text-align-center"><?php echo esc_html( $dek ); ?></p>
 		<?php endif; ?>
-		<?php if ( '' !== $outline['intro'] ) : ?>
+		<?php if ( $show_intro && '' !== $outline['intro'] ) : ?>
 			<p class="dsg-works-intro"><?php echo esc_html( $outline['intro'] ); ?></p>
 		<?php endif; ?>
 		<div class="dsg-works-list">
@@ -292,7 +322,9 @@ function dsg_ebook_render_projects_chapter( $attributes ) {
 				</div>
 			<?php endforeach; ?>
 		</div>
-		<div class="dsg-ornament" aria-hidden="true">· · ·</div>
+		<?php if ( $show_ornament ) : ?>
+			<div class="dsg-ornament" aria-hidden="true">· · ·</div>
+		<?php endif; ?>
 	</section>
 	<?php
 	return ob_get_clean();

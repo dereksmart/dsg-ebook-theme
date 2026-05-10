@@ -111,6 +111,6 @@ jq -c '.[]' "$TMP_DIR/posts.json" | while read -r row; do
 	upsert_post post "$slug" "$title" "$status" "$date" "$content_file" "$excerpt_file"
 done
 
-wp_local theme activate dsg-ebook-theme >/dev/null
+wp_local theme activate dsg-ereader-theme >/dev/null
 
 echo "Local WordPress content synced from staging."

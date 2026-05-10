@@ -4,7 +4,7 @@ This theme uses `@wordpress/env` to run a local WordPress site for visual iterat
 
 ## Where This Lives
 
-The local environment config belongs in `dsg-ebook-theme/`, not the parent project root.
+The local environment config belongs in `dsg-ereader-theme/`, not the parent project root.
 
 Reasons:
 
@@ -47,7 +47,7 @@ WP_APP_PASSWORD=
 From the theme repo:
 
 ```bash
-cd /Users/dsmart/Desktop/ai/dereksmartgordon-site/dsg-ebook-theme
+cd /Users/dsmart/Desktop/ai/dereksmartgordon-site/dsg-ereader-theme
 npm install
 npm run env:start
 npm run env:seed
@@ -79,10 +79,16 @@ Start the site:
 npm run env:start
 ```
 
-Sync the current staging pages and posts into the local database:
+Seed fixture content for block/theme development:
 
 ```bash
 npm run env:seed
+```
+
+Sync the current staging pages and posts into the local database for regression checks:
+
+```bash
+npm run env:seed:staging
 ```
 
 Stop the containers:
@@ -98,4 +104,3 @@ npm run env:reset
 ```
 
 Theme file edits are mounted into the container, so CSS, template, and PHP changes should be visible after a browser refresh.
-

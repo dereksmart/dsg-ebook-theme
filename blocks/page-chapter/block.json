@@ -1,0 +1,48 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dsg/page-chapter",
+	"version": "0.1.0",
+	"title": "Page Chapter",
+	"category": "theme",
+	"icon": "book",
+	"description": "Render a selected Page as an ereader chapter.",
+	"textdomain": "dsg-ereader",
+	"attributes": {
+		"slug": {
+			"type": "string",
+			"default": ""
+		},
+		"id": {
+			"type": "string",
+			"default": ""
+		},
+		"chapter": {
+			"type": "string",
+			"default": ""
+		},
+		"title": {
+			"type": "string",
+			"default": ""
+		},
+		"dek": {
+			"type": "string",
+			"default": ""
+		},
+		"dropcap": {
+			"type": "boolean",
+			"default": false
+		},
+		"showOrnament": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./editor.css"
+}

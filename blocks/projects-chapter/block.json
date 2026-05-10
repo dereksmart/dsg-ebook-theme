@@ -1,0 +1,48 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dsg/projects-chapter",
+	"version": "0.1.0",
+	"title": "Projects Chapter",
+	"category": "theme",
+	"icon": "portfolio",
+	"description": "Render the temporary Projects page bridge as an ereader works chapter.",
+	"textdomain": "dsg-ereader",
+	"attributes": {
+		"slug": {
+			"type": "string",
+			"default": "projects"
+		},
+		"id": {
+			"type": "string",
+			"default": "works"
+		},
+		"chapter": {
+			"type": "string",
+			"default": ""
+		},
+		"title": {
+			"type": "string",
+			"default": ""
+		},
+		"dek": {
+			"type": "string",
+			"default": ""
+		},
+		"showIntro": {
+			"type": "boolean",
+			"default": true
+		},
+		"showOrnament": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./editor.css"
+}

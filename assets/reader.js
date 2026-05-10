@@ -1,5 +1,5 @@
 /**
- * DSG Ebook — reader.js
+ * DSG E-reader — reader.js
  *
  * Front-end runtime for the e-reader chrome:
  *   - Footnote auto-numbering + click-to-popover

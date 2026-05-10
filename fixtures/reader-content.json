@@ -1,0 +1,50 @@
+{
+	"site": {
+		"blogname": "derek smart-gordon",
+		"blogdescription": "Dev lead. Building reader-shaped AI tools."
+	},
+	"pages": [
+		{
+			"slug": "about",
+			"title": "About the Author",
+			"status": "publish",
+			"date": "2026-05-10 09:00:00",
+			"excerpt": "A fixture author chapter for the reader theme.",
+			"content": "<!-- wp:paragraph -->\n<p>I work on software teams that turn new technical systems into usable, durable products. The through-line is helping people understand what the machine is doing, what it needs from them, and where the work should go next.</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:paragraph -->\n<p>This fixture page is intentionally not a mirror of the live site. It gives the theme stable prose, inline <mark class=\"dsg-highlight\" data-readers=\"18\">reader highlights</mark>, and normal Gutenberg blocks to render while the future content model evolves.</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:quote -->\n<blockquote class=\"wp-block-quote\"><!-- wp:paragraph -->\n<p>Good tools should make the next right action easier to see.</p>\n<!-- /wp:paragraph --></blockquote>\n<!-- /wp:quote -->"
+		},
+		{
+			"slug": "projects",
+			"title": "Selected Works",
+			"status": "publish",
+			"date": "2026-05-10 09:10:00",
+			"excerpt": "Fixture project cards used by the transitional Projects page bridge.",
+			"content": "<!-- wp:paragraph -->\n<p>A development fixture for the temporary Projects page bridge. The final model should become structured project posts, but the block still needs to tolerate today's page-card source.</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:heading {\"level\":2} -->\n<h2 class=\"wp-block-heading\">Reader Systems</h2>\n<!-- /wp:heading -->\n\n<!-- wp:columns -->\n<div class=\"wp-block-columns\"><!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:paragraph -->\n<p>Prototype</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:heading {\"level\":3} -->\n<h3 class=\"wp-block-heading\"><a href=\"https://example.com/folio\">Folio Runtime</a></h3>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p>A small runtime for turning long-form work into navigable chapters with progress, resume points, and calm typography.</p>\n<!-- /wp:paragraph --></div>\n<!-- /wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:paragraph -->\n<p>Experiment</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:heading {\"level\":3} -->\n<h3 class=\"wp-block-heading\"><a href=\"https://example.com/marginalia\">Marginalia Lab</a></h3>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p>An interface study for notes, definitions, citations, and lightweight editorial context around essays.</p>\n<!-- /wp:paragraph --></div>\n<!-- /wp:column --></div>\n<!-- /wp:columns -->\n\n<!-- wp:heading {\"level\":2} -->\n<h2 class=\"wp-block-heading\">Operations Tools</h2>\n<!-- /wp:heading -->\n\n<!-- wp:columns -->\n<div class=\"wp-block-columns\"><!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:paragraph -->\n<p>Internal</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:heading {\"level\":3} -->\n<h3 class=\"wp-block-heading\"><a href=\"https://example.com/briefing-room\">Briefing Room</a></h3>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p>A dashboard-shaped workspace for collecting evidence, open questions, and decision records before a product review.</p>\n<!-- /wp:paragraph --></div>\n<!-- /wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:paragraph -->\n<p>Automation</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:heading {\"level\":3} -->\n<h3 class=\"wp-block-heading\"><a href=\"https://example.com/run-notes\">Run Notes</a></h3>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p>A local workflow harness for turning recurring analysis tasks into auditable, repeatable runs.</p>\n<!-- /wp:paragraph --></div>\n<!-- /wp:column --></div>\n<!-- /wp:columns -->"
+		},
+		{
+			"slug": "coda",
+			"title": "Coda",
+			"status": "publish",
+			"date": "2026-05-10 09:20:00",
+			"excerpt": "Fixture contact chapter.",
+			"content": "<!-- wp:paragraph -->\n<p>This page exists as fixture content for a future coda/contact chapter block. It is not wired into the homepage template yet.</p>\n<!-- /wp:paragraph -->"
+		}
+	],
+	"posts": [
+		{
+			"slug": "notes-on-reader-shaped-websites",
+			"title": "Notes on Reader-Shaped Websites",
+			"status": "publish",
+			"date": "2026-05-10 10:00:00",
+			"excerpt": "A fixture essay about reader interfaces.",
+			"content": "<!-- wp:paragraph -->\n<p>A reader-shaped website can borrow from books without pretending the browser is paper. The useful parts are progress, focus, return paths, and a content model that respects chapters.</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:paragraph -->\n<p>The less useful part is fake pagination. Real web reading still has to handle font changes, viewport changes, zoom, assistive technology, and links that move the reader somewhere else.</p>\n<!-- /wp:paragraph -->"
+		},
+		{
+			"slug": "structured-projects-beat-page-cards",
+			"title": "Structured Projects Beat Page Cards",
+			"status": "publish",
+			"date": "2026-05-09 10:00:00",
+			"excerpt": "A fixture essay about moving project content into a CPT.",
+			"content": "<!-- wp:paragraph -->\n<p>Project cards are easy to draw once and hard to reuse later. A project post type gives each entry a title, URL, summary, status, grouping, and body that can be queried wherever the theme needs it.</p>\n<!-- /wp:paragraph -->"
+		}
+	]
+}

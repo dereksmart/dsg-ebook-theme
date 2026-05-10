@@ -1,5 +1,5 @@
 /**
- * DSG Ebook — editor-formats.js
+ * DSG E-reader — editor-formats.js
  *
  * Registers three inline formats for the rich-text toolbar so authors can
  * highlight, define, and footnote text the same way they bold or italicize:
