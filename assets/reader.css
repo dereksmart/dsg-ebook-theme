@@ -196,29 +196,6 @@ body.admin-bar { --dsg-admin-bar-h: 32px; }
 	white-space: nowrap;
 }
 
-/* ---------- bookmark ribbon ---------- */
-.dsg-bookmark {
-	position: fixed;
-	top: calc(var(--dsg-admin-bar-h) + var(--dsg-top-bar-h));
-	right: 30px;
-	width: 22px;
-	height: 44px;
-	z-index: 49;
-	background: transparent;
-	border: none;
-	cursor: pointer;
-	color: var(--wp--preset--color--ink-faint);
-	opacity: 0.58;
-	transition: color 0.2s, opacity 0.2s, transform 0.2s;
-}
-.dsg-bookmark svg { width: 100%; height: 100%; display: block; }
-.dsg-bookmark:hover {
-	color: var(--wp--preset--color--bookmark);
-	opacity: 1;
-	transform: translateY(2px);
-}
-.dsg-bookmark.is-active { color: var(--wp--preset--color--bookmark); opacity: 1; }
-
 /* ---------- page-turn arrows (desktop only) ---------- */
 .dsg-pageturn {
 	position: fixed; top: 50%;
@@ -789,7 +766,6 @@ html[data-theme="dark"] .dsg-highlight { background: rgba(232, 196, 80, 0.22); }
 		column-gap: 10px;
 	}
 	.dsg-time-left { display: none; }
-	.dsg-bookmark { right: 16px; }
 	.dsg-pageturn { display: none; }
 	.dsg-cover { padding: 56px 24px; }
 	.dsg-cover-title { font-size: 54px !important; }

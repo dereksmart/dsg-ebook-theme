@@ -11,8 +11,7 @@
 				{ "slug": "ink-soft",   "color": "#5b5446", "name": "Soft ink" },
 				{ "slug": "ink-faint",  "color": "#8a836f", "name": "Faint ink" },
 				{ "slug": "rule",       "color": "#d3c9ad", "name": "Rule" },
-				{ "slug": "highlight",  "color": "#e8c450", "name": "Highlight" },
-				{ "slug": "bookmark",   "color": "#b0360b", "name": "Bookmark red" }
+				{ "slug": "highlight",  "color": "#e8c450", "name": "Highlight" }
 			],
 			"defaultPalette": false,
 			"defaultGradients": false,

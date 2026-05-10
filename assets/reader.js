@@ -4,7 +4,6 @@
  * Front-end runtime for the e-reader chrome:
  *   - Footnote auto-numbering + click-to-popover
  *   - Dictionary popover for `.dsg-define`
- *   - Bookmark ribbon (per-URL, persisted in localStorage)
  *   - Aa cycler (font size + light/dark theme)
  *   - Reading progress bar + estimated time-left
  *   - Chapter-jump arrows + keyboard shortcuts
@@ -82,34 +81,6 @@
 						'<div class="dsg-pop-body">' + escapeHTML( def ) + '</div>'
 				);
 			} );
-		} );
-	}
-
-	// --------- bookmark ribbon ---------
-	function ensureBookmark() {
-		var bm = document.getElementById( 'dsg-bookmark' );
-		if ( bm ) {
-			return bm;
-		}
-		bm = document.createElement( 'button' );
-		bm.id = 'dsg-bookmark';
-		bm.type = 'button';
-		bm.className = 'dsg-bookmark';
-		bm.setAttribute( 'aria-label', 'Bookmark this page' );
-		bm.innerHTML = '<svg viewBox="0 0 24 56" fill="currentColor" aria-hidden="true"><path d="M0 0 L24 0 L24 56 L12 46 L0 56 Z"/></svg>';
-		document.body.appendChild( bm );
-		return bm;
-	}
-	function wireBookmark() {
-		var bm = ensureBookmark();
-		var key = 'dsg-bookmark-' + window.location.pathname;
-		function set( on ) {
-			bm.classList.toggle( 'is-active', !! on );
-			try { localStorage.setItem( key, on ? '1' : '0' ); } catch ( e ) { /* noop */ }
-		}
-		try { set( localStorage.getItem( key ) === '1' ); } catch ( e ) { /* noop */ }
-		bm.addEventListener( 'click', function () {
-			set( ! bm.classList.contains( 'is-active' ) );
 		} );
 	}
 
@@ -224,16 +195,12 @@
 			if ( e.key === 'ArrowLeft' || e.key === 'PageUp' ) {
 				jumpSection( -1 );
 			} else if ( e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ' ) {
-				e.preventDefault();
-				jumpSection( 1 );
-			} else if ( e.key === 'Escape' ) {
-				hidePopover();
-			} else if ( e.key === 'b' && ( e.metaKey || e.ctrlKey ) ) {
-				e.preventDefault();
-				var bm = document.getElementById( 'dsg-bookmark' );
-				if ( bm ) { bm.click(); }
-			}
-		} );
+			e.preventDefault();
+			jumpSection( 1 );
+		} else if ( e.key === 'Escape' ) {
+			hidePopover();
+		}
+	} );
 	}
 
 	// --------- popover dismiss on outside click ---------
@@ -269,11 +236,9 @@
 
 	// --------- init ---------
 	function init() {
-		ensureBookmark();
 		ensurePageTurns();
 		wireFootnotes();
 		wireDefine();
-		wireBookmark();
 		wireAa();
 		wireProgress();
 		wireKeyboard();
