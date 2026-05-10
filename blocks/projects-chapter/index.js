@@ -103,8 +103,8 @@
 					},
 				} ),
 				el( TextControl, {
-					label: __( 'Chapter label', 'dsg-ereader' ),
-					placeholder: __( 'Chapter Two', 'dsg-ereader' ),
+					label: __( 'Section label', 'dsg-ereader' ),
+					placeholder: __( 'Catalog', 'dsg-ereader' ),
 					value: attributes.chapter || '',
 					onChange: function ( value ) {
 						setAttributes( { chapter: value } );

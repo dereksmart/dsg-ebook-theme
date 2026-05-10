@@ -43,8 +43,8 @@
 					},
 				} ),
 				el( TextControl, {
-					label: __( 'Chapter label', 'dsg-ereader' ),
-					placeholder: __( 'Chapter Three', 'dsg-ereader' ),
+					label: __( 'Section label', 'dsg-ereader' ),
+					placeholder: __( 'Reading List', 'dsg-ereader' ),
 					value: attributes.chapter || '',
 					onChange: function ( value ) {
 						setAttributes( { chapter: value } );
@@ -171,7 +171,7 @@
 			},
 			chapter: {
 				type: 'string',
-				default: 'Chapter Three',
+				default: 'Reading List',
 			},
 			title: {
 				type: 'string',

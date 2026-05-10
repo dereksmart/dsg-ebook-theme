@@ -15,7 +15,7 @@
 		},
 		"chapter": {
 			"type": "string",
-			"default": "Chapter Three"
+			"default": "Reading List"
 		},
 		"title": {
 			"type": "string",
