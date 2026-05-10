@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const DSG_EBOOK_VERSION = '0.1.5';
+const DSG_EBOOK_VERSION = '0.1.12';
 
 /**
  * Theme support.
@@ -72,23 +72,67 @@ function dsg_ebook_enqueue_editor() {
 add_action( 'enqueue_block_editor_assets', 'dsg_ebook_enqueue_editor' );
 
 /**
- * Print the saved theme + base size before paint to avoid FOUC.
+ * Print the saved theme + reader scale before paint to avoid FOUC.
  */
 function dsg_ebook_preference_script() {
 	?>
 	<script>
 		(function () {
 			try {
-				var t = localStorage.getItem('dsg-ebook-theme-idx');
-				var s = localStorage.getItem('dsg-ebook-size-idx');
-				var sizes = [16, 17, 18, 20, 22];
-				var themes = ['light', 'dark'];
-				var ti = parseInt(t, 10); if (isNaN(ti) || ti < 0 || ti >= themes.length) ti = 0;
-				var si = parseInt(s, 10); if (isNaN(si) || si < 0 || si >= sizes.length) si = 2;
-				document.documentElement.setAttribute('data-theme', themes[ti]);
-				document.documentElement.style.setProperty('--dsg-base-size', sizes[si] + 'px');
+				var sizes = [
+					['small', '0.94', '17px', '15px', '21px', '23px', '39px', '39px', '27px', '13px', '19px', '13px', '10px', '68px', '23px', '13px', '17px', '10px'],
+					['base', '1', '18px', '16px', '22px', '24px', '42px', '42px', '28px', '13px', '20px', '14px', '11px', '72px', '24px', '14px', '18px', '10px'],
+					['large', '1.12', '20px', '18px', '25px', '27px', '47px', '47px', '31px', '15px', '22px', '15px', '12px', '80px', '27px', '15px', '20px', '11px'],
+					['xlarge', '1.24', '22px', '20px', '27px', '30px', '52px', '52px', '34px', '16px', '25px', '16px', '12px', '88px', '30px', '16px', '22px', '12px']
+				];
+				var vars = [
+					'--dsg-reader-scale',
+					'--dsg-copy-size',
+					'--dsg-small-copy-size',
+					'--dsg-list-title-size',
+					'--dsg-section-title-size',
+					'--dsg-chapter-title-size',
+					'--dsg-archive-title-size',
+					'--dsg-toc-heading-size',
+					'--dsg-toc-subtitle-size',
+					'--dsg-coda-note-size',
+					'--dsg-label-size',
+					'--dsg-small-label-size',
+					'--dsg-cover-title-size',
+					'--dsg-cover-subtitle-size',
+					'--dsg-cover-author-size',
+					'--dsg-cover-author-name-size',
+					'--dsg-cover-meta-size'
+				];
+				var step = parseInt(localStorage.getItem('dsg-reader-size-step'), 10);
+				if (isNaN(step)) {
+					var oldStep = parseInt(localStorage.getItem('dsg-ebook-size-idx'), 10);
+					step = oldStep <= 1 ? 0 : oldStep === 2 ? 1 : oldStep === 3 ? 2 : 3;
+				}
+				if (isNaN(step) || step < 0 || step >= sizes.length) step = 1;
+				var theme = localStorage.getItem('dsg-reader-theme');
+				if (theme !== 'light' && theme !== 'dark') {
+					theme = parseInt(localStorage.getItem('dsg-ebook-theme-idx'), 10) === 1 ? 'dark' : 'light';
+				}
+				var fonts = {
+					serif: "Literata, 'Iowan Old Style', Georgia, serif",
+					sans: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+					mono: "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+				};
+				var font = localStorage.getItem('dsg-reader-font');
+				if (!Object.prototype.hasOwnProperty.call(fonts, font)) font = 'serif';
+				document.documentElement.setAttribute('data-reader-size', sizes[step][0]);
+				for (var i = 0; i < vars.length; i++) {
+					document.documentElement.style.setProperty(vars[i], sizes[step][i + 1]);
+				}
+				document.documentElement.setAttribute('data-theme', theme);
+				document.documentElement.setAttribute('data-reader-font', font);
+				document.documentElement.style.setProperty('--dsg-reader-font', fonts[font]);
 			} catch (e) {
+				document.documentElement.setAttribute('data-reader-size', 'base');
+				document.documentElement.style.setProperty('--dsg-reader-scale', 1);
 				document.documentElement.setAttribute('data-theme', 'light');
+				document.documentElement.setAttribute('data-reader-font', 'serif');
 			}
 		})();
 	</script>

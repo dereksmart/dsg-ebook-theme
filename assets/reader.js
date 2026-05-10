@@ -4,7 +4,7 @@
  * Front-end runtime for the e-reader chrome:
  *   - Footnote auto-numbering + click-to-popover
  *   - Dictionary popover for `.dsg-define`
- *   - Aa cycler (font size + light/dark theme)
+ *   - Reader controls (text scale + light/dark theme)
  *   - Reading progress bar + estimated time-left
  *   - Chapter-jump arrows + keyboard shortcuts
  */
@@ -121,31 +121,213 @@
 		sections[ next ].scrollIntoView( { behavior: 'smooth', block: 'start' } );
 	}
 
-	// --------- Aa cycle ---------
-	function wireAa() {
-		var btn = document.getElementById( 'dsg-aa-btn' );
-		if ( ! btn ) {
+	// --------- reader controls ---------
+	function setReaderPanelOpen( open ) {
+		var trigger = document.getElementById( 'dsg-reader-trigger' );
+		var panel = document.getElementById( 'dsg-reader-panel' );
+		if ( ! trigger || ! panel ) {
 			return;
 		}
-		var sizes = [ 16, 17, 18, 20, 22 ];
-		var themes = [ 'light', 'dark' ];
-		var sIdx = readInt( 'dsg-ebook-size-idx', 2, sizes.length );
-		var tIdx = readInt( 'dsg-ebook-theme-idx', 0, themes.length );
-		apply();
-		btn.addEventListener( 'click', function () {
-			sIdx++;
-			if ( sIdx >= sizes.length ) {
-				sIdx = 2;
-				tIdx = ( tIdx + 1 ) % themes.length;
+		panel.classList.toggle( 'is-open', !! open );
+		panel.setAttribute( 'aria-hidden', open ? 'false' : 'true' );
+		trigger.setAttribute( 'aria-expanded', open ? 'true' : 'false' );
+	}
+	function isReaderPanelOpen() {
+		var panel = document.getElementById( 'dsg-reader-panel' );
+		return !! ( panel && panel.classList.contains( 'is-open' ) );
+	}
+	function wireReaderControls() {
+		var trigger = document.getElementById( 'dsg-reader-trigger' );
+		var panel = document.getElementById( 'dsg-reader-panel' );
+		var dec = document.getElementById( 'dsg-type-dec' );
+		var inc = document.getElementById( 'dsg-type-inc' );
+		var status = document.getElementById( 'dsg-type-status' );
+		var fontBtns = document.querySelectorAll( '[data-reader-font]' );
+		var themeBtns = document.querySelectorAll( '[data-reader-theme]' );
+		if ( ! trigger || ! panel || ! dec || ! inc || ! status || ! fontBtns.length || ! themeBtns.length ) {
+			return;
+		}
+		var sizes = [
+			{
+				key: 'small',
+				label: '94%',
+				vars: {
+					'--dsg-reader-scale': '0.94',
+					'--dsg-copy-size': '17px',
+					'--dsg-small-copy-size': '15px',
+					'--dsg-list-title-size': '21px',
+					'--dsg-section-title-size': '23px',
+					'--dsg-chapter-title-size': '39px',
+					'--dsg-archive-title-size': '39px',
+					'--dsg-toc-heading-size': '27px',
+					'--dsg-toc-subtitle-size': '13px',
+					'--dsg-coda-note-size': '19px',
+					'--dsg-label-size': '13px',
+					'--dsg-small-label-size': '10px',
+					'--dsg-cover-title-size': '68px',
+					'--dsg-cover-subtitle-size': '23px',
+					'--dsg-cover-author-size': '13px',
+					'--dsg-cover-author-name-size': '17px',
+					'--dsg-cover-meta-size': '10px'
+				}
+			},
+			{
+				key: 'base',
+				label: '100%',
+				vars: {
+					'--dsg-reader-scale': '1',
+					'--dsg-copy-size': '18px',
+					'--dsg-small-copy-size': '16px',
+					'--dsg-list-title-size': '22px',
+					'--dsg-section-title-size': '24px',
+					'--dsg-chapter-title-size': '42px',
+					'--dsg-archive-title-size': '42px',
+					'--dsg-toc-heading-size': '28px',
+					'--dsg-toc-subtitle-size': '13px',
+					'--dsg-coda-note-size': '20px',
+					'--dsg-label-size': '14px',
+					'--dsg-small-label-size': '11px',
+					'--dsg-cover-title-size': '72px',
+					'--dsg-cover-subtitle-size': '24px',
+					'--dsg-cover-author-size': '14px',
+					'--dsg-cover-author-name-size': '18px',
+					'--dsg-cover-meta-size': '10px'
+				}
+			},
+			{
+				key: 'large',
+				label: '112%',
+				vars: {
+					'--dsg-reader-scale': '1.12',
+					'--dsg-copy-size': '20px',
+					'--dsg-small-copy-size': '18px',
+					'--dsg-list-title-size': '25px',
+					'--dsg-section-title-size': '27px',
+					'--dsg-chapter-title-size': '47px',
+					'--dsg-archive-title-size': '47px',
+					'--dsg-toc-heading-size': '31px',
+					'--dsg-toc-subtitle-size': '15px',
+					'--dsg-coda-note-size': '22px',
+					'--dsg-label-size': '15px',
+					'--dsg-small-label-size': '12px',
+					'--dsg-cover-title-size': '80px',
+					'--dsg-cover-subtitle-size': '27px',
+					'--dsg-cover-author-size': '15px',
+					'--dsg-cover-author-name-size': '20px',
+					'--dsg-cover-meta-size': '11px'
+				}
+			},
+			{
+				key: 'xlarge',
+				label: '124%',
+				vars: {
+					'--dsg-reader-scale': '1.24',
+					'--dsg-copy-size': '22px',
+					'--dsg-small-copy-size': '20px',
+					'--dsg-list-title-size': '27px',
+					'--dsg-section-title-size': '30px',
+					'--dsg-chapter-title-size': '52px',
+					'--dsg-archive-title-size': '52px',
+					'--dsg-toc-heading-size': '34px',
+					'--dsg-toc-subtitle-size': '16px',
+					'--dsg-coda-note-size': '25px',
+					'--dsg-label-size': '16px',
+					'--dsg-small-label-size': '12px',
+					'--dsg-cover-title-size': '88px',
+					'--dsg-cover-subtitle-size': '30px',
+					'--dsg-cover-author-size': '16px',
+					'--dsg-cover-author-name-size': '22px',
+					'--dsg-cover-meta-size': '12px'
+				}
 			}
-			apply();
+		];
+		var fonts = {
+			serif: "Literata, 'Iowan Old Style', Georgia, serif",
+			sans: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+			mono: "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+		};
+		var sIdx = readInt( 'dsg-reader-size-step', legacySizeStep(), sizes.length );
+		var theme = readTheme();
+		var font = readFont( fonts );
+
+		trigger.addEventListener( 'click', function ( e ) {
+			e.stopPropagation();
+			setReaderPanelOpen( ! isReaderPanelOpen() );
 		} );
-		function apply() {
-			document.body.style.fontSize = sizes[ sIdx ] + 'px';
-			document.documentElement.setAttribute( 'data-theme', themes[ tIdx ] );
+		panel.addEventListener( 'click', function ( e ) {
+			e.stopPropagation();
+		} );
+		document.addEventListener( 'click', function ( e ) {
+			if ( ! isReaderPanelOpen() ) {
+				return;
+			}
+			if ( panel.contains( e.target ) || trigger.contains( e.target ) ) {
+				return;
+			}
+			setReaderPanelOpen( false );
+		} );
+
+		dec.addEventListener( 'click', function () {
+			if ( sIdx > 0 ) {
+				sIdx--;
+				applyReaderPrefs( true );
+			}
+		} );
+		inc.addEventListener( 'click', function () {
+			if ( sIdx < sizes.length - 1 ) {
+				sIdx++;
+				applyReaderPrefs( true );
+			}
+		} );
+		fontBtns.forEach( function ( btn ) {
+			btn.addEventListener( 'click', function () {
+				var next = btn.getAttribute( 'data-reader-font' );
+				if ( ! fonts[ next ] ) {
+					return;
+				}
+				font = next;
+				applyReaderPrefs( true );
+			} );
+		} );
+		themeBtns.forEach( function ( btn ) {
+			btn.addEventListener( 'click', function () {
+				var next = btn.getAttribute( 'data-reader-theme' );
+				if ( next !== 'light' && next !== 'dark' ) {
+					return;
+				}
+				theme = next;
+				applyReaderPrefs( true );
+			} );
+		} );
+
+		applyReaderPrefs( false );
+
+		function applyReaderPrefs( persist ) {
+			var size = sizes[ sIdx ];
+			document.documentElement.setAttribute( 'data-reader-size', size.key );
+			Object.keys( size.vars ).forEach( function ( name ) {
+				document.documentElement.style.setProperty( name, size.vars[ name ] );
+			} );
+			document.documentElement.setAttribute( 'data-theme', theme );
+			document.documentElement.setAttribute( 'data-reader-font', font );
+			document.documentElement.style.setProperty( '--dsg-reader-font', fonts[ font ] );
+			status.textContent = size.label;
+			status.setAttribute( 'aria-label', 'Text size ' + size.label );
+			dec.disabled = sIdx === 0;
+			inc.disabled = sIdx === sizes.length - 1;
+			fontBtns.forEach( function ( btn ) {
+				btn.setAttribute( 'aria-pressed', btn.getAttribute( 'data-reader-font' ) === font ? 'true' : 'false' );
+			} );
+			themeBtns.forEach( function ( btn ) {
+				btn.setAttribute( 'aria-pressed', btn.getAttribute( 'data-reader-theme' ) === theme ? 'true' : 'false' );
+			} );
+			if ( ! persist ) {
+				return;
+			}
 			try {
-				localStorage.setItem( 'dsg-ebook-size-idx', String( sIdx ) );
-				localStorage.setItem( 'dsg-ebook-theme-idx', String( tIdx ) );
+				localStorage.setItem( 'dsg-reader-size-step', String( sIdx ) );
+				localStorage.setItem( 'dsg-reader-theme', theme );
+				localStorage.setItem( 'dsg-reader-font', font );
 			} catch ( e ) { /* noop */ }
 		}
 	}
@@ -195,12 +377,13 @@
 			if ( e.key === 'ArrowLeft' || e.key === 'PageUp' ) {
 				jumpSection( -1 );
 			} else if ( e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ' ) {
-			e.preventDefault();
-			jumpSection( 1 );
-		} else if ( e.key === 'Escape' ) {
-			hidePopover();
-		}
-	} );
+				e.preventDefault();
+				jumpSection( 1 );
+			} else if ( e.key === 'Escape' ) {
+				hidePopover();
+				setReaderPanelOpen( false );
+			}
+		} );
 	}
 
 	// --------- popover dismiss on outside click ---------
@@ -225,6 +408,39 @@
 			return fallback;
 		}
 	}
+	function legacySizeStep() {
+		var old = readInt( 'dsg-ebook-size-idx', 2, 5 );
+		if ( old <= 1 ) {
+			return 0;
+		}
+		if ( old === 2 ) {
+			return 1;
+		}
+		if ( old === 3 ) {
+			return 2;
+		}
+		return 3;
+	}
+	function readTheme() {
+		try {
+			var saved = localStorage.getItem( 'dsg-reader-theme' );
+			if ( saved === 'light' || saved === 'dark' ) {
+				return saved;
+			}
+			return readInt( 'dsg-ebook-theme-idx', 0, 2 ) === 1 ? 'dark' : 'light';
+		} catch ( e ) {
+			return 'light';
+		}
+	}
+	function readFont( fonts ) {
+		try {
+			var saved = localStorage.getItem( 'dsg-reader-font' );
+			if ( Object.prototype.hasOwnProperty.call( fonts, saved ) ) {
+				return saved;
+			}
+		} catch ( e ) { /* noop */ }
+		return 'serif';
+	}
 	function escapeHTML( s ) {
 		return String( s )
 			.replace( /&/g, '&amp;' )
@@ -239,7 +455,7 @@
 		ensurePageTurns();
 		wireFootnotes();
 		wireDefine();
-		wireAa();
+		wireReaderControls();
 		wireProgress();
 		wireKeyboard();
 		wireDismiss();
