@@ -539,7 +539,14 @@
 
 	// --------- mobile essay swipes ---------
 	function wireEssaySwipe() {
-		if ( ! document.querySelector( '.dsg-essay-nav' ) || ! ( 'ontouchstart' in window ) ) {
+		if ( ! document.querySelector( '.dsg-essay-nav' ) ) {
+			return;
+		}
+		if ( window.PointerEvent ) {
+			wirePointerEssaySwipe();
+			return;
+		}
+		if ( ! ( 'ontouchstart' in window ) ) {
 			return;
 		}
 
@@ -596,19 +603,7 @@
 			}
 			var dx = lastX - startX;
 			var dy = lastY - startY;
-			var absX = Math.abs( dx );
-			var absY = Math.abs( dy );
-			var dir = dx < 0 ? 1 : -1;
-			var link = getEssayTurnLink( dir );
-			if ( ! dragging || ! link || absX < 72 || absX < absY * 1.45 ) {
-				releaseSwipe( false );
-				resetSwipe();
-				return;
-			}
-			releaseSwipe( true, dir );
-			window.setTimeout( function () {
-				window.location.href = link.href;
-			}, 180 );
+			completeSwipe( dx, dy, dragging );
 			resetSwipe();
 		}, { passive: true } );
 
@@ -623,6 +618,95 @@
 			lastY = 0;
 			dragging = false;
 		}
+	}
+	function wirePointerEssaySwipe() {
+		var startX = 0;
+		var startY = 0;
+		var lastX = 0;
+		var lastY = 0;
+		var pointerId = null;
+		var tracking = false;
+		var dragging = false;
+
+		document.addEventListener( 'pointerdown', function ( e ) {
+			if ( ! e.isPrimary || isSwipeTargetIgnored( e.target ) ) {
+				return;
+			}
+			if ( e.pointerType === 'mouse' && e.button !== 0 ) {
+				return;
+			}
+			pointerId = e.pointerId;
+			tracking = true;
+			dragging = false;
+			startX = e.clientX;
+			startY = e.clientY;
+			lastX = startX;
+			lastY = startY;
+			if ( e.target && e.target.setPointerCapture ) {
+				try {
+					e.target.setPointerCapture( pointerId );
+				} catch ( err ) { /* noop */ }
+			}
+		}, { passive: true } );
+
+		document.addEventListener( 'pointermove', function ( e ) {
+			if ( ! tracking || e.pointerId !== pointerId ) {
+				return;
+			}
+			lastX = e.clientX;
+			lastY = e.clientY;
+			var dx = lastX - startX;
+			var dy = lastY - startY;
+			var absX = Math.abs( dx );
+			var absY = Math.abs( dy );
+			if ( ! dragging && absX > 12 && absX > absY * 1.2 ) {
+				dragging = true;
+				document.body.classList.add( 'dsg-is-swiping' );
+			}
+			if ( dragging ) {
+				e.preventDefault();
+				renderSwipe( dx );
+			}
+		}, { passive: false } );
+
+		document.addEventListener( 'pointerup', function ( e ) {
+			if ( ! tracking || e.pointerId !== pointerId ) {
+				return;
+			}
+			completeSwipe( lastX - startX, lastY - startY, dragging );
+			resetPointerSwipe();
+		}, { passive: true } );
+
+		document.addEventListener( 'pointercancel', function ( e ) {
+			if ( e.pointerId === pointerId ) {
+				releaseSwipe( false );
+				resetPointerSwipe();
+			}
+		}, { passive: true } );
+
+		function resetPointerSwipe() {
+			pointerId = null;
+			tracking = false;
+			dragging = false;
+			startX = 0;
+			startY = 0;
+			lastX = 0;
+			lastY = 0;
+		}
+	}
+	function completeSwipe( dx, dy, dragging ) {
+		var absX = Math.abs( dx );
+		var absY = Math.abs( dy );
+		var dir = dx < 0 ? 1 : -1;
+		var link = getEssayTurnLink( dir );
+		if ( ! dragging || ! link || absX < 72 || absX < absY * 1.45 ) {
+			releaseSwipe( false );
+			return;
+		}
+		releaseSwipe( true, dir );
+		window.setTimeout( function () {
+			window.location.href = link.href;
+		}, 180 );
 	}
 	function renderSwipe( dx ) {
 		var max = Math.min( window.innerWidth * 0.42, 180 );

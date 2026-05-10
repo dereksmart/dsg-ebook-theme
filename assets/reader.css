@@ -566,6 +566,7 @@ body.admin-bar { --dsg-admin-bar-h: 32px; }
 /* ---------- chapter (single posts and pages) ---------- */
 .dsg-main { padding: 0; }
 body.single-post .dsg-main {
+	touch-action: pan-y;
 	transform: translate3d(0, 0, 0);
 	transform-origin: center center;
 }
