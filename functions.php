@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const DSG_EREADER_VERSION = '0.1.24';
+const DSG_EREADER_VERSION = '0.1.25';
 
 /**
  * Theme support.
@@ -121,6 +121,20 @@ function dsg_ebook_preference_script() {
 				};
 				var font = localStorage.getItem('dsg-reader-font');
 				if (!Object.prototype.hasOwnProperty.call(fonts, font)) font = 'serif';
+				var widths = {
+					narrow: ['680px', '600px'],
+					standard: ['760px', '680px'],
+					wide: ['880px', '760px']
+				};
+				var width = localStorage.getItem('dsg-reader-page-width');
+				if (!Object.prototype.hasOwnProperty.call(widths, width)) width = 'standard';
+				var leadings = {
+					tight: ['1.52', '1.42'],
+					standard: ['1.68', '1.55'],
+					loose: ['1.82', '1.68']
+				};
+				var leading = localStorage.getItem('dsg-reader-line-height');
+				if (!Object.prototype.hasOwnProperty.call(leadings, leading)) leading = 'standard';
 				document.documentElement.setAttribute('data-reader-size', sizes[step][0]);
 				for (var i = 0; i < vars.length; i++) {
 					document.documentElement.style.setProperty(vars[i], sizes[step][i + 1]);
@@ -128,11 +142,19 @@ function dsg_ebook_preference_script() {
 				document.documentElement.setAttribute('data-theme', theme);
 				document.documentElement.setAttribute('data-reader-font', font);
 				document.documentElement.style.setProperty('--dsg-reader-font', fonts[font]);
+				document.documentElement.setAttribute('data-reader-width', width);
+				document.documentElement.style.setProperty('--dsg-page-width', widths[width][0]);
+				document.documentElement.style.setProperty('--dsg-reading-width', widths[width][1]);
+				document.documentElement.setAttribute('data-reader-leading', leading);
+				document.documentElement.style.setProperty('--dsg-reader-line-height', leadings[leading][0]);
+				document.documentElement.style.setProperty('--dsg-reader-small-line-height', leadings[leading][1]);
 			} catch (e) {
 				document.documentElement.setAttribute('data-reader-size', 'base');
 				document.documentElement.style.setProperty('--dsg-reader-scale', 1);
 				document.documentElement.setAttribute('data-theme', 'light');
 				document.documentElement.setAttribute('data-reader-font', 'serif');
+				document.documentElement.setAttribute('data-reader-width', 'standard');
+				document.documentElement.setAttribute('data-reader-leading', 'standard');
 			}
 		})();
 	</script>
@@ -276,6 +298,22 @@ function dsg_ebook_render_reader_header( $attributes ) {
 								<button class="dsg-reader-choice dsg-font-serif" type="button" data-reader-font="serif" aria-pressed="true">Serif</button>
 								<button class="dsg-reader-choice dsg-font-sans" type="button" data-reader-font="sans" aria-pressed="false">Sans</button>
 								<button class="dsg-reader-choice dsg-font-mono" type="button" data-reader-font="mono" aria-pressed="false">Mono</button>
+							</div>
+						</div>
+						<div class="dsg-reader-row">
+							<div class="dsg-reader-label">Page width</div>
+							<div class="dsg-reader-choices dsg-reader-widths" id="dsg-width-choices" aria-label="Reader page width">
+								<button class="dsg-reader-choice" type="button" data-reader-width="narrow" aria-pressed="false">Narrow</button>
+								<button class="dsg-reader-choice" type="button" data-reader-width="standard" aria-pressed="true">Default</button>
+								<button class="dsg-reader-choice" type="button" data-reader-width="wide" aria-pressed="false">Wide</button>
+							</div>
+						</div>
+						<div class="dsg-reader-row">
+							<div class="dsg-reader-label">Line height</div>
+							<div class="dsg-reader-choices dsg-reader-leading" id="dsg-leading-choices" aria-label="Reader line height">
+								<button class="dsg-reader-choice" type="button" data-reader-leading="tight" aria-pressed="false">Tight</button>
+								<button class="dsg-reader-choice" type="button" data-reader-leading="standard" aria-pressed="true">Normal</button>
+								<button class="dsg-reader-choice" type="button" data-reader-leading="loose" aria-pressed="false">Loose</button>
 							</div>
 						</div>
 						<div class="dsg-reader-row">
