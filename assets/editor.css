@@ -136,6 +136,45 @@
 	text-align: center;
 }
 
+.editor-styles-wrapper .dsg-page-content .wp-block-code,
+.editor-styles-wrapper .dsg-chapter-content .wp-block-code {
+	box-sizing: border-box;
+	max-width: 100%;
+	margin: 28px 0;
+	padding: 16px 18px;
+	overflow-x: hidden;
+	border: 1px solid var(--wp--preset--color--rule);
+	border-radius: 4px;
+	background: var(--wp--preset--color--paper-edge);
+	color: var(--wp--preset--color--ink);
+}
+
+.editor-styles-wrapper .dsg-page-content .wp-block-code code,
+.editor-styles-wrapper .dsg-chapter-content .wp-block-code code {
+	display: block;
+	max-width: 100%;
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+	word-break: break-word;
+	tab-size: 2;
+	font-family: var(--wp--preset--font-family--mono) !important;
+	font-size: 13px !important;
+	line-height: 1.55 !important;
+}
+
+.editor-styles-wrapper .dsg-page-content p > code,
+.editor-styles-wrapper .dsg-page-content li > code,
+.editor-styles-wrapper .dsg-chapter-content p > code,
+.editor-styles-wrapper .dsg-chapter-content li > code {
+	padding: 0.08em 0.28em;
+	border-radius: 3px;
+	background: var(--wp--preset--color--paper-edge);
+	font-family: var(--wp--preset--font-family--mono) !important;
+	font-size: 0.86em !important;
+	overflow-wrap: anywhere;
+	word-break: break-word;
+}
+
 .editor-styles-wrapper .dsg-essay-row {
 	align-items: baseline !important;
 	border-bottom: 1px dotted var(--wp--preset--color--rule);
