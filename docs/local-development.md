@@ -21,6 +21,8 @@ Commit the reproducible local tooling:
 - `package.json`
 - `package-lock.json`
 - `scripts/sync-staging-content.sh`
+- `scripts/seed-fixtures.sh`
+- `fixtures/reader-content.json`
 - this documentation
 
 Do not commit local secrets or generated dependency folders:
@@ -85,11 +87,24 @@ Seed fixture content for block/theme development:
 npm run env:seed
 ```
 
+This resets local pages/posts and recreates theme fixtures. It is intentionally for local development only.
+
+Current fixture coverage:
+
+- Homepage source pages: About, Projects, and Coda.
+- Basic essay navigation posts.
+- Common post-writing blocks.
+- Media, gallery, caption, and embed blocks.
+- Code, table, and long-token wrapping.
+- Wide/full-width reader blocks such as Cover, Media & Text, and Group bands.
+
 Sync the current staging pages and posts into the local database for regression checks:
 
 ```bash
 npm run env:seed:staging
 ```
+
+Use staging sync to check that current live-shaped content still renders. Do not use it as the design source for the future content model.
 
 Stop the containers:
 

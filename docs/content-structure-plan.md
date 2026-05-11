@@ -1,13 +1,13 @@
 # Content Structure Plan
 
-Last checked against staging with the WordPress REST API on 2026-05-10.
+Last checked against staging with the WordPress REST API on 2026-05-10. Local fixture model last updated on 2026-05-11.
 
 Architecture note: the recommended implementation direction is a real block theme with purpose-built custom blocks, not a classic PHP shell. See `docs/theme-architecture-migration.md` for the current theme architecture plan.
 
 ## Current State
 
 - The homepage is now a theme-composed reader experience, not normal page content.
-- Published pages are `about`, `projects`, `blog`, `about-2`, and `home`.
+- Staging previously had published pages `about`, `projects`, `blog`, `about-2`, and `home`.
 - `about` is the canonical author chapter. `about-2` appears to be a duplicate.
 - `projects` is a normal page made from Columns and card-style inline block styles.
 - Published writing is standard Posts. There are four current posts.
@@ -45,12 +45,34 @@ The theme should keep rendering the site as a book, but pull content from struct
 
 Until `dsg_project` exists, the theme uses a `dsg/projects-chapter` dynamic block as a bridge. It reads the current `projects` page block structure, extracts the section headings and project cards, and renders them as a stable reader list on the homepage. This keeps the editor manageable while avoiding the card/grid markup in the front-page reading flow.
 
-## Migration Steps
+## Local Fixture Content
 
-1. Register real editor-facing blocks for the current `dsg/page-chapter` and `dsg/projects-chapter` renderers.
-2. Clean up the homepage template/pattern so users edit reader sections instead of raw HTML.
-3. Add a sibling `dsg-site-core` plugin for durable site content types.
-4. Register `dsg_project`, `project_area`, and the project meta fields.
-5. Migrate each current card from the Projects page into a Project post via REST.
-6. Replace the Projects page fallback with structured project queries.
-7. Set duplicate/legacy pages such as `about-2` and old `home` to draft after confirming nothing links to them.
+The local `npm run env:seed` workflow creates dummy content for the target theme behavior, not a mirror of production.
+
+Current fixtures include:
+
+- Pages: `about`, `projects`, and `coda`.
+- Basic essay flow posts: reader interface notes and structured-project notes.
+- `reader-block-kitchen-sink`: headings, lists, quote, pullquote, details, buttons, separator, verse, inline code.
+- `reader-media-and-embed-fixture`: image, gallery, captions, and embed placeholder.
+- `reader-data-and-code-fixture`: long inline code, code block, table, and long tokens.
+- `reader-wide-block-fixture`: wide Cover, wide Media & Text, full-width Group band, then normal prose.
+
+Use these fixtures to develop the intended block UX and reader styling. Use synced staging/live content as regression data only.
+
+## Migration Status
+
+Done:
+
+- Registered editor-facing reader blocks for the homepage sections.
+- Cleaned up the homepage template so users edit reader sections instead of raw HTML.
+- Added repeatable fixture content for the target reader UX.
+- Added reader styling coverage for common core post blocks.
+
+Remaining:
+
+1. Add a sibling `dsg-site-core` plugin for durable site content types.
+2. Register `dsg_project`, `project_area`, and the project meta fields.
+3. Migrate each current card from the Projects page into a Project post via REST.
+4. Replace the Projects page fallback with structured project queries.
+5. Set duplicate/legacy pages such as `about-2` and old `home` to draft after confirming nothing links to them.

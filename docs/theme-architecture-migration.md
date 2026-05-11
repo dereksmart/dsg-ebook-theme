@@ -1,12 +1,12 @@
 # Theme Architecture Plan
 
-Last updated: 2026-05-10.
+Last updated: 2026-05-11.
 
 ## Decision
 
 Keep this as a WordPress block theme, but make it a real purpose-built reader theme instead of a pile of editable template HTML.
 
-The previous classic/hybrid PHP migration spike was reverted. The lesson from that spike still matters: PHP-owned settings were too rigid, but the current block-theme shell is too raw. The target is a block theme with first-class custom blocks, sensible patterns, good editor previews, and structured content sources.
+The previous classic/hybrid PHP migration spike was reverted. The lesson from that spike still matters: PHP-owned settings were too rigid, but raw template HTML is also too fragile. The target is a block theme with first-class custom blocks, sensible patterns, good editor previews, and structured content sources.
 
 The theme should feel like an ereader on the frontend and like a clear WordPress editing experience in the backend.
 
@@ -20,12 +20,12 @@ Full Site Editing is still useful here, but only if the custom reader pieces are
 - Global styles and editor styles are valuable for a reader theme.
 - Template editing becomes manageable once theme-specific pieces have block controls and previews.
 
-The current problems come from implementation details:
+The remaining problems come from implementation details:
 
-- Structural elements such as cover metadata, table of contents markup, ornaments, and footer details are partly raw Custom HTML.
-- `dsg/page-chapter` and `dsg/projects-chapter` are server render helpers, not mature editor blocks.
-- Unsupported custom block notices make the Site Editor feel broken.
+- A few small ornaments still use raw HTML in templates.
+- Some PHP internals still use the old `dsg_ebook_*` function/localStorage names after the theme rename.
 - Project data is embedded in one Page instead of modeled as reusable content.
+- The Projects page parser is useful as a temporary bridge, but it should not shape the future content model.
 
 ## Product Direction
 
@@ -38,20 +38,20 @@ Prioritize:
 - Resume reading: remember last scroll position locally per post/page.
 - Contents: generated section links on the homepage and article heading TOCs where useful.
 - Chapter navigation: next/previous post flow that feels like moving through chapters.
-- Keyboard and mobile gestures: arrow-key navigation on desktop, careful swipe support later if it does not fight native scrolling.
+- Keyboard and mobile gestures: arrow-key navigation on desktop, mobile edge/swipe navigation that does not fight native scrolling.
 - Reading-mode polish: quieter chrome while scrolling, restored chrome on movement/focus, reduced-motion support.
 - Inline authoring formats: keep footnote, highlight, and definition tools.
 - Share/citation affordance for essays, if it can stay subtle.
 
 Avoid for now:
 
-- Fake paginated page-turning. It is expensive on the web and likely to create responsive, accessibility, and scroll-restoration bugs.
+- A full fixed-page pagination engine. Lightweight page-curl transition affordances are acceptable, but posts should remain scrollable web documents.
 - Reader-generated notes/highlights unless they are intentionally local-only or backed by a real persistence plan.
 - Large settings pages for content that should be Posts, Pages, Projects, or block attributes.
 
 ## Target Theme Shape
 
-Recommended structure after the theme rename:
+Current structure:
 
 - `parts/header.html`: top reader/status chrome.
 - `parts/footer.html`: bottom progress chrome.
@@ -65,7 +65,7 @@ Recommended structure after the theme rename:
 - `blocks/page-chapter/`: pulls a selected Page into a homepage chapter.
 - `blocks/projects-chapter/`: pulls project data, initially via the Projects page bridge.
 - `blocks/essays-chapter/`: pulls recent Posts into the homepage Essays chapter.
-- `blocks/coda/`: optional; use if Coda needs controls beyond a normal Page chapter.
+- `blocks/essay-navigation/`: previous/next essay flow.
 
 Block implementation should use normal WordPress block conventions:
 
@@ -102,66 +102,55 @@ Recommended plugin shape:
 
 Until that exists, `dsg/projects-chapter` can remain a bridge that reads the existing Projects page. The bridge should be treated as transitional.
 
-## Phase Plan
+## Roadmap
 
-### Phase 1: Real Block Registration
+### Done: Real Block Registration
 
-Goal: make the current block theme feel legitimate in the editor.
+The main custom blocks are now real editor-facing blocks with `block.json`, JS editor registration, PHP render callbacks, and editor previews:
 
-Scope:
+- `dsg/book-cover`
+- `dsg/contents`
+- `dsg/reader-header`
+- `dsg/reader-footer`
+- `dsg/page-chapter`
+- `dsg/projects-chapter`
+- `dsg/essays-chapter`
+- `dsg/essay-navigation`
 
-- Add real block registration for existing `dsg/page-chapter` and `dsg/projects-chapter`.
-- Use `block.json`, editor JS, PHP render callbacks, and server-rendered previews.
-- Give each block clear inspector controls.
-- Remove unsupported block notices from the Site Editor.
-- Keep frontend rendering as close as possible to the current design.
+The Site Editor should no longer show unsupported custom block notices for the homepage reader blocks.
 
-Acceptance criteria:
+### Done: Homepage Template Cleanup
 
-- Site Editor no longer says the site does not support `dsg/page-chapter` or `dsg/projects-chapter`.
-- Users can select each custom block and understand what it does.
-- Source page, chapter label, heading, and subtitle can be edited without raw HTML.
-- Missing source content produces a useful editor message, not a broken-looking block.
-
-### Phase 2: Homepage Pattern Cleanup
-
-Goal: reduce raw Custom HTML and make the homepage easier to understand.
-
-Progress:
+The homepage is now mostly composed from reader blocks rather than one large pattern or raw HTML.
 
 - `templates/front-page.html` is now the canonical git-owned homepage composition.
 - `dsg/book-cover` and `dsg/contents` replace the cover and table-of-contents raw template markup.
 - `dsg/reader-header` and `dsg/reader-footer` replace the header/footer Custom HTML blocks.
-- The live homepage no longer references PHP pattern files; sections that should be editable in the Site Editor live directly in `templates/front-page.html`.
 - Essays now uses `dsg/essays-chapter` instead of inline Query markup in the front page template.
 - Coda now uses `dsg/page-chapter` and pulls editable content from the `coda` Page.
 
-Scope:
+Remaining cleanup:
 
-- Keep `templates/front-page.html` as the canonical homepage structure.
-- Use pattern files only as optional starter/inserter content, not for live homepage sections that should be edited in place.
-- Replace raw HTML sections with purpose-built blocks or clean core blocks.
-- Keep cover/contents/coda editable as blocks, not PHP settings.
-- Decide whether the front page template should be locked, partially locked, or simply pattern-seeded.
+- Decide homepage template editing boundaries: locked, partially locked, or simply pattern-seeded.
+- Replace the remaining ornament-only Custom HTML blocks in `templates/single.html` and `templates/page.html` only if it becomes annoying in the editor.
 
-Acceptance criteria:
+### In Progress: Ereader UX Polish
 
-- Editing the homepage feels like editing reader sections, not raw implementation markup.
-- The default pattern can recreate the homepage from git.
-- Template markup remains readable and maintainable.
+The reader now has:
 
-### Phase 3: Ereader UX Polish
+- Header/footer reader chrome.
+- Font size and theme controls.
+- Better reading-time/progress behavior for homepage, posts, and pages.
+- Previous/next essay navigation.
+- Desktop keyboard navigation and mobile swipe/edge navigation with a lightweight page-curl affordance.
 
-Goal: make the reader controls feel intentional and durable.
+Remaining scope:
 
-Scope:
-
-- Refine reader settings panel.
-- Add line-height and page-width controls if they improve readability.
-- Add sepia if it fits the palette.
-- Persist per-page reading position locally.
-- Improve progress behavior across homepage, posts, and pages.
-- Add next/previous chapter navigation for posts.
+- Simplify the reader settings panel by removing low-value line-height and page-width controls from the visible UI.
+- Keep text size, theme, and reset controls.
+- Consider sepia only if it fits the palette without cluttering the panel.
+- Defer local scroll-position resume unless returning to essays feels bad in real use.
+- Later follow-up: make sure the page-curl gesture stays quiet, accessible, and reduced-motion friendly.
 
 Acceptance criteria:
 
@@ -170,7 +159,7 @@ Acceptance criteria:
 - Mobile and desktop chrome do not crowd the content.
 - Progress and resume behavior work across the main templates.
 
-### Phase 4: Projects Content Model
+### Next: Projects Content Model
 
 Goal: make Works structured and reusable.
 
@@ -187,13 +176,18 @@ Acceptance criteria:
 - Works chapter is generated from structured project data.
 - Old Projects page can become an archive intro, draft, or redirect target.
 
-### Phase 5: Authoring Polish
+### In Progress: Authoring Polish
 
 Goal: make writing and page editing feel intentional.
 
-Scope:
+Progress:
 
-- Editor styles for Posts, Pages, and custom blocks.
+- Editor styles now mirror the reader styling for custom blocks and common core post blocks.
+- Fixture posts cover normal writing blocks, media/embed blocks, code/table blocks, and wide/full-width blocks.
+- Code snippets, tables, captions, embeds, Cover, Media & Text, and background Group bands have reader-specific handling.
+
+Remaining scope:
+
 - Optional patterns for article openings, notes, and coda/contact sections.
 - Keep/refine inline footnote, highlight, and definition formats.
 - Consider allowed-block guidance only if the editor feels too open-ended.
@@ -206,22 +200,23 @@ Acceptance criteria:
 
 ## Rename Note
 
-The user plans to rename the theme before the next architecture pass.
+The repo directory, theme stylesheet metadata, package scripts, and local tooling now use `dsg-ereader-theme`.
 
-Expected target name: `dsg-ereader-theme`.
-
-The repo directory and local tooling now use `dsg-ereader-theme`. Some PHP internals still use the older `dsg_ebook_*` names; treat that as a mechanical cleanup task, not architecture work.
+Some PHP internals and localStorage keys still use older `dsg_ebook_*` / `dsg-ebook-*` names. Treat that as a mechanical cleanup task, not architecture work. Preserve backward compatibility for existing reader preferences if those keys are renamed.
 
 Important rename caveat: changing the WordPress theme directory slug can disconnect Site Editor customizations stored under the old slug. Prefer canonical templates and patterns in git over preserving ad hoc Site Editor edits unless there is a specific customization worth migrating.
 
-## Next Session Pickup
+## Current Next Steps
 
-Start here after the rename:
+1. Decide homepage template locking/editing boundaries.
+2. Simplify reader controls by removing line-height and page-width from the visible UI.
+3. Start the sibling `dsg-site-core` plugin when ready to model Projects as real content.
+4. Keep testing against fixture posts first, then synced staging/live content as regression data.
 
-1. Confirm the renamed repo/theme is clean with `git status --short`.
-2. Confirm WordPress sees it as a block theme with `wp_is_block_theme()`.
-3. Inventory existing custom block renderers in `functions.php`.
-4. Implement Phase 1 for `dsg/page-chapter` and `dsg/projects-chapter`.
-5. Verify the Site Editor no longer shows unsupported block notices.
+Later follow-up:
+
+- Reduced-motion/accessibility pass for mobile gestures and the page-curl affordance.
+- Local scroll-position resume, only if the current progress/footer behavior is not enough.
+- Ornament-only template HTML cleanup, only if the editor friction is noticeable.
 
 Do not restart the classic PHP migration. That direction was intentionally abandoned.
