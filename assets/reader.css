@@ -575,16 +575,125 @@ body.single-post.dsg-is-swiping {
 }
 body.single-post.dsg-is-swiping .dsg-main {
 	opacity: var(--dsg-swipe-opacity, 1);
-	transform: translate3d(var(--dsg-swipe-x, 0), 0, 0) rotateY(var(--dsg-swipe-tilt, 0deg));
+	transform: translate3d(var(--dsg-swipe-x, 0), 0, 0);
 	transition: none;
 	will-change: transform, opacity;
 }
 body.single-post.dsg-swipe-cancel .dsg-main,
 body.single-post.dsg-swipe-commit .dsg-main {
 	opacity: var(--dsg-swipe-opacity, 1);
-	transform: translate3d(var(--dsg-swipe-x, 0), 0, 0) rotateY(var(--dsg-swipe-tilt, 0deg));
+	transform: translate3d(var(--dsg-swipe-x, 0), 0, 0);
 	transition: transform 180ms ease-out, opacity 180ms ease-out;
 	will-change: transform, opacity;
+}
+.dsg-page-fold {
+	position: fixed;
+	top: calc(var(--dsg-admin-bar-h) + var(--dsg-top-bar-h));
+	width: var(--dsg-fold-size, 0px);
+	height: var(--dsg-fold-size, 0px);
+	z-index: 49;
+	opacity: 0;
+	overflow: visible;
+	pointer-events: none;
+	transition: opacity 160ms ease-out, width 180ms ease-out, height 180ms ease-out;
+	filter: drop-shadow(0 10px 16px rgba(45,36,18,0.2));
+}
+body.dsg-is-swiping .dsg-page-fold {
+	opacity: 1;
+	transition: none;
+}
+body.dsg-swipe-cancel .dsg-page-fold,
+body.dsg-swipe-commit .dsg-page-fold {
+	opacity: 1;
+}
+.dsg-page-fold::before,
+.dsg-page-fold::after,
+.dsg-page-fold-under {
+	content: '';
+	position: absolute;
+	inset: 0;
+}
+.dsg-page-fold-under {
+	z-index: 0;
+	background:
+		linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0) 54%),
+		var(--wp--preset--color--paper);
+	box-shadow: inset 0 0 0 1px rgba(96,78,43,0.08);
+}
+.dsg-page-fold::before {
+	z-index: 2;
+	background:
+		radial-gradient(circle at var(--dsg-fold-tip-x) var(--dsg-fold-tip-y), rgba(255,255,255,0.62), rgba(255,255,255,0) 28%),
+		linear-gradient(var(--dsg-fold-light-angle), rgba(255,255,255,0.44), rgba(255,255,255,0) 44%),
+		linear-gradient(var(--dsg-fold-paper-angle), var(--wp--preset--color--paper) 0%, var(--wp--preset--color--paper-edge) 52%, var(--wp--preset--color--paper-edge) 100%);
+	background-color: var(--wp--preset--color--paper-edge);
+}
+.dsg-page-fold::after {
+	z-index: 3;
+	height: 2px;
+	inset: auto;
+	background: linear-gradient(90deg, transparent 0%, rgba(64,50,25,0.38) 48%, transparent 100%);
+	mix-blend-mode: multiply;
+	opacity: calc(0.32 + (var(--dsg-fold-progress, 0) * 0.34));
+	transform-origin: center;
+}
+body.dsg-fold-next .dsg-page-fold {
+	right: 0;
+	left: auto;
+	transform-origin: 100% 0;
+	--dsg-fold-light-angle: 135deg;
+	--dsg-fold-paper-angle: 315deg;
+	--dsg-fold-tip-x: 22%;
+	--dsg-fold-tip-y: 82%;
+}
+body.dsg-fold-next .dsg-page-fold-under {
+	clip-path: polygon(100% 0, 100% 100%, 22% 82%, 0 0);
+}
+body.dsg-fold-next .dsg-page-fold::before {
+	clip-path: polygon(0 0, 100% 100%, 22% 82%);
+}
+body.dsg-fold-next .dsg-page-fold::after {
+	top: 50%;
+	right: -21%;
+	width: 142%;
+	transform: rotate(45deg);
+}
+body.dsg-fold-previous .dsg-page-fold {
+	left: 0;
+	right: auto;
+	transform-origin: 0 0;
+	--dsg-fold-light-angle: 45deg;
+	--dsg-fold-paper-angle: 225deg;
+	--dsg-fold-tip-x: 78%;
+	--dsg-fold-tip-y: 82%;
+}
+body.dsg-fold-previous .dsg-page-fold-under {
+	clip-path: polygon(0 0, 100% 0, 78% 82%, 0 100%);
+}
+body.dsg-fold-previous .dsg-page-fold::before {
+	clip-path: polygon(100% 0, 0 100%, 78% 82%);
+}
+body.dsg-fold-previous .dsg-page-fold::after {
+	top: 50%;
+	left: -21%;
+	width: 142%;
+	transform: rotate(-45deg);
+}
+html[data-theme="dark"] .dsg-page-fold {
+	filter: drop-shadow(0 14px 18px rgba(0,0,0,0.34));
+}
+html[data-theme="dark"] .dsg-page-fold-under {
+	background:
+		linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0) 54%),
+		var(--wp--preset--color--paper);
+	box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+}
+html[data-theme="dark"] .dsg-page-fold::before {
+	background:
+		radial-gradient(circle at var(--dsg-fold-tip-x) var(--dsg-fold-tip-y), rgba(255,255,255,0.12), rgba(255,255,255,0) 28%),
+		linear-gradient(var(--dsg-fold-light-angle), rgba(255,255,255,0.1), rgba(255,255,255,0) 42%),
+		linear-gradient(var(--dsg-fold-paper-angle), var(--wp--preset--color--paper-edge) 0%, var(--wp--preset--color--rule) 56%, rgba(0,0,0,0.42) 100%);
+	background-color: var(--wp--preset--color--rule);
 }
 .dsg-chapter {
 	box-sizing: border-box;

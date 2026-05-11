@@ -632,7 +632,7 @@
 			if ( ! e.isPrimary || isSwipeTargetIgnored( e.target ) ) {
 				return;
 			}
-			if ( e.pointerType === 'mouse' && e.button !== 0 ) {
+			if ( e.pointerType === 'mouse' ) {
 				return;
 			}
 			pointerId = e.pointerId;
@@ -709,32 +709,68 @@
 		}, 180 );
 	}
 	function renderSwipe( dx ) {
-		var max = Math.min( window.innerWidth * 0.42, 180 );
+		var dir = dx < 0 ? 1 : -1;
+		var link = getEssayTurnLink( dir );
+		var max = Math.min( window.innerWidth * 0.42, 190 );
 		var x = Math.max( -max, Math.min( max, dx ) );
 		var progress = Math.min( 1, Math.abs( x ) / max );
-		document.documentElement.style.setProperty( '--dsg-swipe-x', x.toFixed( 1 ) + 'px' );
-		document.documentElement.style.setProperty( '--dsg-swipe-tilt', ( x / max * -2.2 ).toFixed( 2 ) + 'deg' );
-		document.documentElement.style.setProperty( '--dsg-swipe-opacity', ( 1 - progress * 0.18 ).toFixed( 3 ) );
+		var availableProgress = link ? progress : progress * 0.35;
+		var foldMax = Math.min( window.innerWidth * 0.38, 156 );
+		var foldSize = 24 + availableProgress * ( foldMax - 24 );
+
+		ensurePageFold();
+		document.body.classList.toggle( 'dsg-fold-next', dir > 0 );
+		document.body.classList.toggle( 'dsg-fold-previous', dir < 0 );
+		document.documentElement.style.setProperty( '--dsg-swipe-x', '0px' );
+		document.documentElement.style.setProperty( '--dsg-swipe-opacity', '1' );
+		document.documentElement.style.setProperty( '--dsg-fold-progress', availableProgress.toFixed( 3 ) );
+		document.documentElement.style.setProperty( '--dsg-fold-size', foldSize.toFixed( 1 ) + 'px' );
 	}
 	function releaseSwipe( commit, dir ) {
 		document.body.classList.remove( 'dsg-is-swiping' );
 		document.body.classList.add( commit ? 'dsg-swipe-commit' : 'dsg-swipe-cancel' );
 		if ( commit ) {
-			document.documentElement.style.setProperty( '--dsg-swipe-x', ( dir > 0 ? '-46vw' : '46vw' ) );
-			document.documentElement.style.setProperty( '--dsg-swipe-tilt', ( dir > 0 ? '4deg' : '-4deg' ) );
-			document.documentElement.style.setProperty( '--dsg-swipe-opacity', '0.14' );
+			ensurePageFold();
+			document.body.classList.toggle( 'dsg-fold-next', dir > 0 );
+			document.body.classList.toggle( 'dsg-fold-previous', dir < 0 );
+			document.documentElement.style.setProperty( '--dsg-swipe-x', '0px' );
+			document.documentElement.style.setProperty( '--dsg-swipe-opacity', '1' );
+			document.documentElement.style.setProperty( '--dsg-fold-progress', '1' );
+			document.documentElement.style.setProperty( '--dsg-fold-size', Math.min( window.innerWidth * 0.42, 184 ).toFixed( 1 ) + 'px' );
 		} else {
 			document.documentElement.style.setProperty( '--dsg-swipe-x', '0px' );
-			document.documentElement.style.setProperty( '--dsg-swipe-tilt', '0deg' );
 			document.documentElement.style.setProperty( '--dsg-swipe-opacity', '1' );
+			document.documentElement.style.setProperty( '--dsg-fold-progress', '0' );
+			document.documentElement.style.setProperty( '--dsg-fold-size', '0px' );
 		}
 		window.setTimeout( clearSwipePresentation, commit ? 220 : 180 );
 	}
 	function clearSwipePresentation() {
-		document.body.classList.remove( 'dsg-is-swiping', 'dsg-swipe-cancel', 'dsg-swipe-commit' );
+		document.body.classList.remove(
+			'dsg-is-swiping',
+			'dsg-swipe-cancel',
+			'dsg-swipe-commit',
+			'dsg-fold-next',
+			'dsg-fold-previous'
+		);
 		document.documentElement.style.removeProperty( '--dsg-swipe-x' );
-		document.documentElement.style.removeProperty( '--dsg-swipe-tilt' );
 		document.documentElement.style.removeProperty( '--dsg-swipe-opacity' );
+		document.documentElement.style.removeProperty( '--dsg-fold-progress' );
+		document.documentElement.style.removeProperty( '--dsg-fold-size' );
+	}
+	function ensurePageFold() {
+		var fold = document.querySelector( '.dsg-page-fold' );
+		if ( ! fold ) {
+			fold = document.createElement( 'div' );
+			fold.className = 'dsg-page-fold';
+			fold.setAttribute( 'aria-hidden', 'true' );
+			document.body.appendChild( fold );
+		}
+		if ( ! fold.querySelector( '.dsg-page-fold-under' ) ) {
+			var under = document.createElement( 'span' );
+			under.className = 'dsg-page-fold-under';
+			fold.appendChild( under );
+		}
 	}
 	function isSwipeTargetIgnored( target ) {
 		return !! (
