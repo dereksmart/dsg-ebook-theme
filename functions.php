@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const DSG_EREADER_VERSION = '0.1.38';
+const DSG_EREADER_VERSION = '0.1.40';
 
 /**
  * Theme support.
